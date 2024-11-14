@@ -1,0 +1,22 @@
+services:
+  jupyterhub:
+    build: .
+    image: timeseries-dev
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./jupyterhub_config.py:/srv/jupyterhub/jupyterhub_config.py
+      - jupyterhub_data:/srv/jupyterhub/data
+    ports:
+      - "8000:8000"
+    networks:
+      - jupyterhub
+    # environment:
+    #   - JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
+    #   - PYSPARK_SUBMIT_ARGS="--master local[2] pyspark-shell"
+
+volumes:
+  jupyterhub_data:
+
+networks:
+  jupyterhub:
+    name: jupyterhub

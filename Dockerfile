@@ -1,47 +1,58 @@
-# Stage , Use an official Python runtime as the first base image
-FROM python:3.9-slim AS python-base
+# Use the official JupyterHub Docker image as the base
+FROM jupyterhub/jupyterhub:latest
 
-# Install Java, Git, and other dependencies
-RUN apt-get update && apt-get install -y \
-    git \
-    wget \
-    && rm -rf /var/lib/apt/lists/*
+# Install OpenJDK 11
+RUN apt-get update && apt-get install -y openjdk-11-jdk && \
+    apt-get install -y vim && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 
-# Install Jupyter Notebook
-RUN pip install jupyter
-
-# Stage 2: Use the second base image
-FROM openjdk:11-slim AS java-base
-
-# Install Java, Git, and other dependencies
-RUN apt-get update && apt-get install -y \
-    wget \
-    && rm -rf /var/lib/apt/lists/*
-
-# Install Spark
-RUN wget https://archive.apache.org/dist/spark/spark-3.1.2/spark-3.1.2-bin-hadoop3.2.tgz && \
-    tar -xvzf spark-3.1.2-bin-hadoop3.2.tgz && \
-    mv spark-3.1.2-bin-hadoop3.2 /usr/local/spark && \
-    rm spark-3.1.2-bin-hadoop3.2.tgz
+# Make a directory for Spark installation
+RUN mkdir -p /usr/local/spark
 
 # Set environment variables for Spark
+ENV SPARK_VERSION=3.5.3
+ENV HADOOP_VERSION=3
+ENV JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
+ENV PATH=$PATH:$JAVA_HOME/bin
+ENV PYSPARK_SUBMIT_ARGS="--master local[2] pyspark-shell"
+RUN echo "export JAVA_HOME=$(dirname $(dirname $(readlink -f $(type -P java))))" > ~/.bashrc
 ENV SPARK_HOME=/usr/local/spark
-ENV PATH=$SPARK_HOME/bin:$PATH
+ENV PATH=$PATH:$SPARK_HOME/bin:$SPARK_HOME/sbin
 
-# Stage 3: Combine the results
-FROM python-base AS final
+# Install Spark
+RUN curl -L https://dlcdn.apache.org/spark/spark-${SPARK_VERSION}/spark-${SPARK_VERSION}-bin-hadoop${HADOOP_VERSION}.tgz | tar -xz -C /opt && \
+   mv /opt/spark-${SPARK_VERSION}-bin-hadoop${HADOOP_VERSION}/* $SPARK_HOME
 
-# Copy files from the java-base stage
-COPY --from=java-base /usr/local/spark /usr/local/spark
+RUN cd /srv/jupyterhub/
+RUN jupyterhub upgrade-db
 
-# Set the working directory in the container
-WORKDIR /GIT
+# # Create a new user jovyan
+# RUN useradd -m jovyan
+# RUN useradd -m test
+# RUN useradd -m peng
+# RUN useradd -m semla
+# RUN useradd -m mechele
+# RUN useradd -m kasper
+# RUN useradd -m erik
 
-# Install PyTorch, PySpark, SparkTorch
-RUN pip install torch pyspark sparktorch 
+WORKDIR /home/jovyan/work
+RUN mkdir -p /home/jovyan/work/data
+RUN cd /home/jovyan/work
 
-# Expose any necessary ports
-EXPOSE 8888
+# Copy a configuration file for JupyterHub (explained below)
+COPY jupyterhub_config.py /srv/jupyterhub/jupyterhub_config.py
+COPY test.py /home/jovyan/work/test.py
 
-# Define the command to run the UI (e.g., Jupyter Notebook)
-CMD ["jupyter", "notebook", "--ip=localhost", "--port=9999"]
+# Install PyTorch, PySpark, and JupyterLab (optional but recommended for more features)
+# RUN pip install torch && \
+#     pip install jupyterlab pyspark numpy pandas scipy && \
+#     pip install traitlets dockerspawner
+
+RUN pip install findspark jupyterlab dockerspawner
+
+# Expose JupyterHub's default port
+EXPOSE 8000
+
+# Start JupyterHub when the container launches
+CMD ["jupyterhub", "--config", "/srv/jupyterhub/jupyterhub_config.py"]
