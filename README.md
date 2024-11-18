@@ -2,6 +2,7 @@
 
 ## 1. Clone the project
 Git clone this repo to a directory of your machine:
+
 `git clone https://github.com/PengKuang/team_scalable_timeseries.git`
 
 Then, navigate into the project folder you just cloned.
@@ -47,5 +48,7 @@ Now you can code freely there. Note you still need to use 'pip install package_n
 All the changes you made in the container will be saved to your local project directory. Once you are happy with it, you can push it to the remote team repository. 
 
 ## 3. Dataset 
+
+Download the corresponding dataset and move it to your project folder so that the Autoencoder can read it. 
 
 GaitRec: <https://springernature.figshare.com/collections/GaitRec_A_large-scale_ground_reaction_force_dataset_of_healthy_and_impaired_gait/4788012/1>
