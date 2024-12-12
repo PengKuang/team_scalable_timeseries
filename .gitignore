@@ -9,3 +9,4 @@ tests_cluster/
 *.hea
 *.hea-
 workbench.ipynb
+gitignore_folder/
