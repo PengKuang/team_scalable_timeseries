@@ -19,7 +19,7 @@ Or if I'm already in my home directory '/Users/pengkuang/' where I git cloned th
 `cd team_scalable_timeseries`
 
 ## 2. Run the docker image
-Assuming that you have already installed the Docker app on your machine. 
+Assuming that you have already installed the Docker app on your machine and it is up. 
 
 ### Step 1
 First, pull down this docker image: <https://hub.docker.com/r/jupyter/pyspark-notebook>
@@ -35,7 +35,7 @@ This command is to run the docker image in an interactive mode, with the port nu
 ### Step 2
 After this, open your browser and go to 'http://localhost:8888'
 
-You should see a unusual login page asking you for a token. 
+You should see an unusual login page asking you for a token. 
 
 Read this article for where to find the token: <https://levelup.gitconnected.com/using-docker-and-pyspark-134cd4cab867>
 
@@ -49,6 +49,6 @@ All the changes you made in the container will be saved to your local project di
 
 ## 3. Dataset 
 
-Download the corresponding dataset and move it to your project folder so that the Autoencoder can read it. 
+Download the corresponding dataset and move it to your project folder so that the autoencoder can read it. 
 
-GaitRec: <https://springernature.figshare.com/collections/GaitRec_A_large-scale_ground_reaction_force_dataset_of_healthy_and_impaired_gait/4788012/1>
+ECG: <https://www.kaggle.com/code/mineshjethva/ecg-anomaly-detection>
