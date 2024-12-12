@@ -1,5 +1,6 @@
+> Project by [Kasper Bågmark](https://research.chalmers.se/person/bagmark), [Michele Di Sabato](https://www.umu.se/en/staff/michele-di-sabato/), [Erik Jansson](https://www.chalmers.se/en/persons/erikjans/), [Peng Kuang](https://portal.research.lu.se/en/persons/peng-kuang) and [Selma Tabakovic](https://www.chalmers.se/en/persons/selmat/)
+
 # Anomaly detection in time series using autoencoders 
-Project by Kasper Bågmark, Michele di Sabato, Erik Jansson, Peng Kuang and Selma Tabakovic
 The goal of this project is to take a scalable approach to anomaly detection in time series. 
 More specifically, we consider electrocardiogram data, i.e., _time series_ of heart rate sequences. The challenge is to reliably detect if such a time series is _anomalous_, or in other words, deviates from healthy heartbeat patterns. 
 
