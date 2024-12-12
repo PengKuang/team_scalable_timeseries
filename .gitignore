@@ -4,3 +4,8 @@
 results/
 trained_networks/
 tests_cluster/
+*.dat
+*.ecg
+*.hea
+*.hea-
+workbench.ipynb
