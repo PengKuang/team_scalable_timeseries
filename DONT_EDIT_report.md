@@ -55,9 +55,9 @@ At inference time, the autoencoder trained on normal signals collected in the da
 
 If $x$ is a normal signal, then $d(x)$ is a sample from $\pi_{\mathcal D}$. Consequently, we do not expect $1-\text{CDF}_{\pi_{\mathcal D}}(d(x))$ to be low, namely we do not expect $d(x)$ to be an outlier with respect to the distribution of the reconstruction losses of normal signals (i.e. $\pi_{\mathcal D}$). Therefore:
 
-3. Set a threshold $\alpha$. If $1-\text{CDF}_{\pi_{\mathcal D}}(d(x)) \leq \alpha$, then the new time series $x$ is flagged as an anomaly. 
+3. Set a (small) threshold $\alpha$. If $1-\text{CDF}_{\pi_{\mathcal D}}(d(x)) \leq \alpha$, then the new time series $x$ is flagged as an anomaly. 
 
-Notice that this anomaly detection pipeline returns a number in the $[0,1]$ interval (namely, $1-\text{CDF}_{\pi_{\mathcal D}}(d(x))$), which could be regarded as the "probability" of the new signals being anomalous. Ideally, this would be the final output of the pipeline, letting experts in the filed to actually have the last word on whether the given time series is atypical or not. If the data have been collected in the medical field, this option might be safer than relying on the chosen threshold $\alpha$. We choose to select a threshold and to actually flag time series as normal or anomalous for the purpose of evaluating the performance of the pipeline.
+Notice that this anomaly detection pipeline returns a number in the $[0,1]$ interval (namely, $1-\text{CDF}_{\pi_{\mathcal D}}(d(x))$), which could be regarded as the "probability" that the new signal is anomalous. Ideally, this would be the final output of the pipeline, letting experts in the field actually have the last word on whether the given time series is atypical or not. If the data have been collected in the medical field, this option might be safer than relying on the chosen threshold $\alpha$. We choose to select a threshold and to actually flag time series as normal or anomalous for the purpose of evaluating the performance of the pipeline.
 
 Remark: An alternative to this approach might be to compare the new time series $x$ and the normal signals in the dataset $\mathcal D$ through the embdedd features learned by the autoencoder. 
 
