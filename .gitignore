@@ -10,3 +10,4 @@ tests_cluster/
 *.hea-
 workbench.ipynb
 gitignore_folder/
+checkpoint.pt
