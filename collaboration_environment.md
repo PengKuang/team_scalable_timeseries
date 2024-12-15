@@ -4,9 +4,10 @@ The technical stack we ustilize to set up our collaboration environment consists
 
 We chose Docker since we have hetogenious devices (4 Macs and 1 Windows) which suits containerization and it is widely used in the industry. We take it as a learning opportunity to increase our knowledge and extend our skillset. It further prevents dependency inconsistency and conflits.
 
-![Architecture of the collaboration environment](\report_images\timeseries-dev-env.png "collaboration environment")
-
 The development environment is built on top of an official pyspark docker image. Each team member can pull it down to their machine and run it locally for coding. 
+
+![Collaboration Environment](report_images/timeseries-dev-env-v2.png "Collaboration Environment")
+
 This ensures the team has an uniform development environment. Afterwards, the team members push their code to the git repository.
 
 ### Choice of PySpark, PyTorch and TorchDistributor
