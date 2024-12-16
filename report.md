@@ -81,7 +81,7 @@ For our purposes, all anomalies are collected in one single class. This decision
 
 ## Time series anomaly detection using autoencoders
 
-The autoncoder is trained on normal, non-anomalous time series, collected in the dataset $\mathcal D$. Each time series is represented in a latent space $\mathcal E$ by the encoder and then the decoder is used to map $\mathcal E$ back to the time series given as input to the model. The underlying assumption is that if the autoencder is fed an anomalous signal, then its reconstruction performance is poor, either because the latent representation of the anomalous signal differs from the one of the training samples or because the reconstruction loss of the abnormal signal is high. This assumption is motivated by the fact that the autoencoder is trained on normal signals.
+The autoencoder is trained on normal, non-anomalous time series, collected in the dataset $\mathcal D$. Each time series is represented in a latent space $\mathcal E$ by the encoder and then the decoder is used to map $\mathcal E$ back to the time series given as input to the model. The underlying assumption is that if the autoencder is fed an anomalous signal, then its reconstruction performance is poor, either because the latent representation of the anomalous signal differs from the one of the training samples or because the reconstruction loss of the abnormal signal is high. This assumption is motivated by the fact that the autoencoder is trained on normal signals.
 
 At inference time, the autoencoder trained on normal signals collected in the dataset $\mathcal D$ is given as input a new time series $\tilde{x}$, that is then mapped to its latent representation and then reconstructed back to $\varphi_D ( \varphi_E(\tilde{x}))$. The technique that we use to understand if the given signal is anomalous or not works in this way. 
 1.  We compute the distribution of the reconstruction losses on the training set, namely the distribution of $\{d(z, \varphi_D ( \varphi_E(z))) \ \forall z \in \mathcal D\}$. For ease of notation, we re-define $d(\cdot, \varphi_D ( \varphi_E(\cdot)))$ as $d(\cdot)$ and by $d(\mathcal D)$ we mean the collection of the reconstruction losses on the training set $\mathcal D$. Moreover, we indicate the distribution of $d(\mathcal D)$ with $\pi_{\mathcal D}$. Notice that the support of this distribution is the set of positive real numbers.
@@ -92,7 +92,7 @@ If $x$ is a normal signal and it has a shape coeherent with the ones of the norm
 
 3. Set a (small) threshold $\alpha$. If $1-\text{CDF}\_{\pi\_{\mathcal D}}(d(x)) \leq \alpha$, then the new time series $x$ is flagged as an anomaly. 
 
-Notice that this anomaly detection pipeline returns a number in the $[0,1]$ interval (namely, $1-\text{CDF}\_{\pi\_{\mathcal D}}(d(x))$), which could be regarded as the "probability" that the new signal is anomalous. Ideally, this would be the final output of the pipeline, letting experts in the field actually have the last word on whether the given time series is atypical or not. If the data have been collected in the medical field, this option might be safer than relying on the chosen threshold $\alpha$. We choose to select a threshold and to actually flag time series as normal or anomalous for the purpose of evaluating the performance of the pipeline. Finally, since the CDF of $\pi_{\mathcal D}$ is of course unknown in practice, we estimate it using the Empirial Cumulative Density Function.
+Notice that this anomaly detection pipeline returns a number in the $[0,1]$ interval ( namely, $1-\text{CDF}\_{\pi\_{\mathcal D}}(d(x))$ ), which could be regarded as the "probability" that the new signal is anomalous. Ideally, this would be the final output of the pipeline, letting experts in the field actually have the last word on whether the given time series is atypical or not. If the data have been collected in the medical field, this option might be safer than relying on the chosen threshold $\alpha$. We choose to select a threshold and to actually flag time series as normal or anomalous for the purpose of evaluating the performance of the pipeline. Finally, since the CDF of $\pi_{\mathcal D}$ is of course unknown in practice, we estimate it using the Empirial Cumulative Density Function.
 
 Remark: An alternative to this approach might be to compare the new time series $x$ and the normal signals in the dataset $\mathcal D$ through the embdedd features learned by the autoencoder. 
 
@@ -124,15 +124,18 @@ In our application with ECG data, we assume the data is managed by a centralized
 
 We would like to train a copy of the shared model at each hospital with its own data. Implemented by TorchDistributor, the gradients from each node will be averaged and synchronized through interprocess communications, and then used to update the local model replica. This enables each worker node (hospital) to process new data to evaluate anomalies locally during the inference stage. It again enforces privacy preservation.
 
-![architecture of ddp implemented by TorchDistributor](./report_images/timeseries-ddp.png "DDP with TorchDistributor")
-
 In this report, we focus on time series data from a single ECG dataset. To develop a plausible model, we implement an ensemble approach on a local machine. Instead of assigning a GPU node to each model and its corresponding data partition, we utilize a single machine by distributing the workload across CPU cores. For this purpose, we use the PySpark TorchDistributor framework, which efficiently distributes tasks across multiple cores. While designed to support GPUs and multi-GPU setups at each node, this framework is also adaptable for parallel processing on CPU cores.
-
-![Pipeline of ensemble Anomaly detection](./report_images/GA2.png "Pipeline of ensemble Anomaly detection")
 
 Below we describe how we implement TorchDistributor and how we use it:
 
-More information can be found [databricks.com/TorchDistributor](https://www.databricks.com/blog/2023/04/20/pytorch-databricks-introducing-spark-pytorch-distributor.html), and from the links within. Below we briefly explain the main structure, mostly cited from the databricks link.
+More information can be found [databricks.com/TorchDistributor](https://www.databricks.com/blog/2023/04/20/pytorch-databricks-introducing-spark-pytorch-distributor.html), and from the links within. Below we briefly explain the main structure, mostly cited from the databricks link. The following figure shows hoe `TorchDistributor` works:
+
+<p align="center">
+  <img src="./report_images/timeseries-ddp.png" width="700" />
+</p>
+<p align="center">
+  <sub>Scalability through `TorchDistributor`.</sub>
+</p>
 
 The main functionality can be summarized in this code block.
 
@@ -156,6 +159,13 @@ Running the ensemble on our own computer (laptop without GPUs `use_gpu = False`)
 
 In our main training function (where each node is working) we make use `local_rank = int(os.environ["LOCAL_RANK"])`. This retrieves which node that is working and in a very simple way we can collect the correct partition and model. Similarly, the model parameters are saved based on their `local_rank` to know which node it belongs to.
 
+The following figure summerizes how scalability is implemented:
+<p align="center">
+  <img src="./report_images/GA2.png" width="700" />
+</p>
+<p align="center">
+  <sub>Pipeline of Ensemble Anomaly Detection.</sub>
+</p>
 
 ## Final notes:
 
@@ -167,9 +177,14 @@ We chose Docker since we have hetogenious devices (4 Macs and 1 Windows) which s
 
 The development environment is built on top of an official pyspark docker image. Each team member can pull it down to their machine and run it locally for coding. 
 
-![Collaboration Environment](report_images/timeseries-dev-env-v2.png "Collaboration Environment")
-
 This ensures the team has an uniform development environment. Afterwards, the team members push their code to the git repository.
+
+<p align="center">
+  <img src="report_images/timeseries-dev-env-v2.png" width="700" />
+</p>
+<p align="center">
+  <sub>Overview of collaboration environment.</sub>
+</p>
 
 ### Choice of PySpark, PyTorch and TorchDistributor
 We chose PySpark as the framework to develop the scalable and distributed machine learning pipeline.
