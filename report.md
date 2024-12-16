@@ -70,30 +70,37 @@ The raw data are collected in [this](https://www.physionet.org/content/chfdb/1.0
 
 ## Scalability
 
-The primary objective of this project is to utilize an ensemble approach when the dataset exceeds the capacity of a single machine. Beyond handling large-scale data, adopting an ensemble model offers several advantages. Notably, it enables the application of a federated learning framework, where local nodes compute simple metrics (resulting in low transfer costs) and transmit them to the master node. This approach ensures data privacy by keeping sensitive information localized.
+The primary objective of this project is to utilize an ensemble approach when the dataset exceeds the capacity of a single machine. Beyond handling large-scale data, adopting an ensemble model offers several advantages. Notably, it enables the application of a distributed learning framework, where worker nodes compute simple metrics (resulting in low transfer costs) and transmit them to the master node. This approach ensures data privacy by keeping sensitive information localized.
 
-We begin by outlining the ensemble approach. Consider a dataset $D$ with size $S_D$, and assume that a single node can feasibly train a model on data of size $S_1$ within a reasonable timeframe. If $S_1 \geq S_D $, there is no need to employ an ensemble, and a single model can be trained on the entire dataset. However, if $S_1 < S_D $, we partition the dataset as $ D = \bigcup_{i=1}^N D_i $, dividing it into chunks $D_i$ such that $|D_i| \leq S_1$, each of which fits within the capacity of a single node. Here, $N$ denotes the total number of nodes used.
+We begin by outlining the ensemble approach. Consider a dataset $D$ with size $S_D$, and assume that a single node can feasibly train a model on data of size $S_1$ within a reasonable timeframe. If $S_D \leq S\_1 $, there is no need to employ an ensemble, and a single model can be trained on the entire dataset. However, if $S\_D > S\_1 $, we partition the dataset as $ D = \bigcu\_{i=1}^N D\_i $, dividing it into chunks $D_i$ such that $|D_i| \leq S\_1$, each of which fits within the capacity of a single node. Here, $N$ denotes the total number of nodes used.
 
 
 The process proceeds by letting 
-1. Trainig
-    1. Node $i$ receives data $D_i$, $i=1,\dots,N$
-    2. Node $i$ defines a model $m_i$, $i=1,\dots,N$
-    3. Model $m_i$ is trained on $D_i$ until some criteria is met, $i=1,\dots,N$
+1. Training
+    1. Node $i$ receives data $D\_i$, $i=1,\dots,N$
+    2. Node $i$ defines a model $m\_i$, $i=1,\dots,N$
+    3. Model $m_i$ is trained on $D\_i$ until some criteria is met, $i=1,\dots,N$
 2. Inference
-    1. The master node is fed a set (possibly single element) $D_{test}$ to perform TASK (Anomaly detection)
-    2. Assuming $|D_{test}| < S_1 $, we send the whole set to each node $i$, $i=1,\dots,N$
-    3. Node $i$ evalutes and returns $f_{AD}(m_i(D_{test}))$ to master node, $i=1,\dots,N$, ($AD$ = Anomaly detection)
+    1. The master node is fed a set (possibly single element) $D\_{test}$ to perform TASK (Anomaly detection)
+    2. Assuming $|D\_{test}| < S\_1 $, we send the whole set to each node $i$, $i=1,\dots,N$
+    3. Node $i$ evalutes and returns $f\_{AD}(m\_i(D\_{test}))$ to master node, $i=1,\dots,N$, ($AD$ = Anomaly detection)
     4. Master node evaluates the mean (or anything else)
-       $$
-       Output = \frac{1}{N}\sum_{i=1}^{N} f_{AD}(m_i(D_{test}))
-       $$
+       $$\text{Output} = \frac{1}{N}\sum\_{i=1}^{N} f\_{AD}(m\_i(D\_{test}))$$
    
 (Note that the output can either be a single value representing an inference for the entire dataset or be evaluated pointwise, providing individual inference values for each data point.)
 
-This approach works for any type of data partitioning, making it well-suited for federated learning, where data privacy must be maintained at each node. In our application with ECG data, for instance, where data not necessarily can be shared between hospitals, we would train a separate model at each hospital. During the inference stage (assuming this is permitted by the hospitals), the new data would be processed at each node (hospital) to evaluate anomalies by averaging the outputs from the individual models. This ensures the privacy of the original data, as it remains within the hospital and only the aggregated inference results are returned to the master node.
+    * Fault Tolerance: The system continues to function (for inference) effectively even if one or more nodes fail.
+    * Dynamic Scaling: As datasets grow, additional nodes can be incorporated to maintain performance.
+
+This approach works for any type of data partitioning, constituting a type of distributed deep learning called Distributed Data Parallel (DDP). In our application with ECG data, we assume the data is managed by a centralized healthcare system, for instance, www.1177.se. The dataset contains the nation's patient records of ten years. It is too big for a single node or cluster at 1177 to train. Although vertical scaling at 1177 is possible, it can still take too long to complete the training or simply cost too much to upgrade the infrastructure. Therefore, the better option is that 1177 acts as a driver to distribute the training job to the hospitals that already have some available, existing infrastructure. Further, 1177 can easily prescribe and actualize that each hospital trains the model with its own ECG data. That is, the hospital can only access the ECG data originally submitted to 1177 by itself. This approach preserves patients' privacy. Meanwhile, hospitals benefit from sharing a model that is well-trained with all the data.
+
+We would like to train a copy of the shared model at each hospital with its own data. Implemented by TorchDistributor, the gradients from each node will be averaged and synchronized through interprocess communications, and then used to update the local model replica. This enables each worker node (hospital) to process new data to evaluate anomalies locally during the inference stage. It again enforces privacy preservation.
+
+![architecture of ddp implemented by TorchDistributor](./report_images/timeseries-ddp.png "DDP with TorchDistributor")
 
 In this report, we focus on time series data from a single ECG dataset. To develop a plausible model, we implement an ensemble approach on a local machine. Instead of assigning a GPU node to each model and its corresponding data partition, we utilize a single machine by distributing the workload across CPU cores. For this purpose, we use the PySpark TorchDistributor framework, which efficiently distributes tasks across multiple cores. While designed to support GPUs and multi-GPU setups at each node, this framework is also adaptable for parallel processing on CPU cores.
+
+![Pipeline of ensemble Anomaly detection](./report_images/GA2.png "Pipeline of ensemble Anomaly detection")
 
 Below we describe how we implement TorchDistributor and how we use it:
 
@@ -113,9 +120,9 @@ result = TorchDistributor(
             <args>     )  # The arguments that should be passed to each node
 ```
 
-In our setting we will let the function, "training", be a function that trains one model with one partitioned data set. <args> will contain training instructions, such as epochs to run, learning rate and other hyperparameters we might want to tune. 
+In our setting, we will let the function, "training", be a function that trains one model with one partitioned data set. <args> will contain training instructions, such as epochs to run, learning rate and other hyperparameters we might want to tune. 
 
-*TO BE SPECIFIED* The data is partitioned in the preprocessing and each node is assigned one partition. The models are either created at this stage or initialized in the "training" function.
+The data is partitioned in the preprocessing and each node is assigned one partition. The models are either created at this stage or initialized in the "training" function.
 
 Running the ensemble on our own computer (laptop without GPUs `use_gpu = False`) , we see that we get best scaling by setting $N$ as the number of CPU cores. We set `local_mode = True`, otherwise the master node (i.e. the only node) will not work.
 
@@ -123,7 +130,7 @@ In our main training function (where each node is working) we make use `local_ra
 
 ## Discussion
 
-TODO: PLENTY OF RESEARCH SUGGESTS AUTOENCODERS IS NOT SUITABLE FOR THE APPLICATION: SHOULD WE DISCUSS THIS?
+TODO: create actual ensemble / add proof of scalability / add check for node imbalance
 
 Neural networks in general and autoencoders can have surprisingly good out-of-sample performance, meaning that even if an autoencoder has not seen a type of anomalous time series, it could still reconstruct the anomalous time series. This in turn results in a low reconstruction performance, meaning that we do not detect the anomaly. For medical applications, one could ask, given this, if it is reasonable to still use autoencoders for anomaly detection purposes. On the one hand, a human interpreting ECG time series can also make mistakes, but on the other, the by some perceived objectivity of deep learning based methods could mean that life-threatening diseases are never diagnosed, and the patient is sent home, because "the computer is objective and cannot lie". 
 
