@@ -14,16 +14,16 @@ Time series models are usually (compared to deep models) simple and easy to fit,
 In this project, we consider the problem of _anomaly detection_, i.e., to, given a previous sample (i.e., training data) of different time series, detect if a new series is anomalous in some way. 
 This can be various things, for instance, if the series contains outlier points, if a subset of the series does not fit in what one would expect, or, as is the case for us, if the series is entirely different in some sense from what is expected. 
 
-<figure style="text-align: center;">
-    <img src="report_images/GA1.png"  width="800" alt="anomaly detection" title="anomaly detection">
-    <figcaption>
-        <sub>Illustration of the anomaly detection procedure. The autoencoder is trained on the normal (green) data. The idea is that normal data will be accurately reconstructed, whereas anomalies are reconstructed poorly.</sub>
-    </figcaption>
-    <br>
-</figure>
-
 One viable approach to this would be to fit a time series model to the training data, and using a statistical approach determine if the new series is different from what the model predicts. 
 In this project, however, we will avoid the modeling step and instead take a fully data-driven approach using a deep learning technique known as _autoencoders_. 
+
+
+<p align="center">
+  <img src="report_images/GA1.png"  width="700">
+</p>
+<p align="center">
+  <sub>Illustration of the anomaly detection procedure. The autoencoder is trained on the normal (green) data. The idea is that normal data will be accurately reconstructed, whereas anomalies are reconstructed poorly.</sub>
+</p>
 
 ## Autoencoders
 
@@ -52,15 +52,6 @@ Then, given the parametrized coders $\varphi_E^{\theta_E}$ and $\varphi_D^{\thet
 
 Electrocardiograms (ECGs) are critical tools for diagnosing heart conditions such as arrhythmias, ischemia, and other cardiac abnormalities. ECG data is routinely collected in hospitals for patient monitoring. This makes it, in theory, suitable for developing machine learning models and deploying them in healthcare to assist physicians. Furthermore, the structured and repetitive nature of ECG signals makes them well-suited for models like autoencoders. Autoencoders excel at learning normal patterns from structured data, enabling the identification of deviations that can be flagged as anomalies for further review by physicians.
 
-<figure style="text-align: center;">
-    <img src="report_images/data.png" width="500" alt="Some normal and anomalous ECGs">
-    <figcaption>
-        <sub>Some normal and anomalous ECGs.</sub>
-    </figcaption>
-    <br>
-</figure>
-
-
 The ECG5000 dataset is a commonly used benchmark in the field of anomaly detection, particularly for detecting irregularities in heart function. The raw data is collected in [this](https://www.physionet.org/content/chfdb/1.0.0/) repository, and was originally collected in [this work](http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&db=PubMed&list_uids=3950244&dopt=Abstract). The raw dataset includes long-term ECG recordings from 15 subjects with severe congestive heart failure:
 - 11 men (aged 22 to 71).
 - 4 women (aged 54 to 63). 
@@ -80,6 +71,13 @@ The final dataset contains:
 - 2921 anomalous heartbeats (categorized into 4 distinct classes, each representing a specific heart condition).
 
 For our purposes, all anomalies are collected in one single class. This decision simplifies the task by focusing on detecting abnormal ECGs rather than diagnosing specific conditions. Such an approach aligns with real-world applications where the goal is often to flag unusual signals for further examination by medical professionals.
+
+<p align="center">
+    <img src="report_images/data.png" width="500" alt="Some normal and anomalous ECGs">
+</p>
+<p align="center">
+        <sub>Some normal and anomalous ECGs.</sub>
+</p>
 
 ## Time series anomaly detection using autoencoders
 
