@@ -14,7 +14,7 @@ Time series models are usually (compared to deep models) simple and easy to fit,
 In this project, we consider the problem of _anomaly detection_, i.e., to, given a previous sample (i.e., training data) of different time series, detect if a new series is anomalous in some way. 
 This can be various things, for instance, if the series contains outlier points, if a subset of the series does not fit in what one would expect, or, as is the case for us, if the series is entirely different in some sense from what is expected. 
 
-<figure>
+<figure style="text-align: center;">
     <img src="report_images/GA1.png" alt="anomaly detection" title="anomaly detection">
     <figcaption style="font-size: smaller;">Illustration of the anomaly detection procedure. The autoencoder is trained on the normal (green) data. The idea is that normal data will be accurately reconstructed, whereas anomalies are reconstructed poorly.</figcaption>
     <br>
@@ -39,7 +39,7 @@ To train the autoencoder, it is assigned a task to solve.
 In practice, this means selecting a data fidelity measure on $\mathcal{D}$, i.e., a function $d\colon \mathcal{D} \times \mathcal{D} \to \mathbb R$.
 Then, given the parametrized coders $\varphi_E^{\theta_E}$ and $\varphi_D^{\theta_D}$, where $\theta_E$ and $\theta_D$ are the parameters of the functions indicated by their subscript, the training problem is to solve $\min_{\theta_E,\theta_D} \sum_{i=1}^N d(x_i,\varphi_D^{\theta_D}\circ \varphi_E^{\theta_E}(x_i)) := \min_{\theta_E,\theta_D} \text{loss}(\theta_E,\theta_D)$ where $\{x_i, i = 1,\ldots N\} \subset \mathcal D$ are the $N$ samples of the training data, e.g., the $N$ time series used to learn what a normal time series should look like. 
 
-<figure>
+<figure style="text-align: center;">
     <img src="report_images/architecture.png">
     <figcaption style="font-size: smaller;">Architecture of the autoencoder when selecting 10 components for the encoded features.</figcaption>
 </figure>
