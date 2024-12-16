@@ -39,7 +39,7 @@ In practice, this means selecting a data fidelity measure on $\mathcal{D}$, i.e.
 Then, given the parametrized coders $\varphi_E^{\theta_E}$ and $\varphi_D^{\theta_D}$, where $\theta_E$ and $\theta_D$ are the parameters of the functions indicated by their subscript, the training problem is to solve $\min_{\theta_E,\theta_D} \sum_{i=1}^N d(x_i,\varphi_D^{\theta_D}\circ \varphi_E^{\theta_E}(x_i)) := \min_{\theta_E,\theta_D} \text{loss}(\theta_E,\theta_D)$ where $\{x_i, i = 1,\ldots N\} \subset \mathcal D$ are the $N$ samples of the training data, e.g., the $N$ time series used to learn what a normal time series should look like. 
 
 <figure>
-    <img src="report_images/network.png">
+    <img src="report_images/architecture.png">
     <figcaption>Architecture of the autoencoder when selecting 10 components for the encoded features.</figcaption>
 </figure>
 
@@ -73,10 +73,6 @@ The final dataset contains:
 - 2921 anomalous heartbeats (categorized into 4 distinct classes, each representing a specific heart condition).
 
 For our purposes, all anomalies are collected in one single class. This decision simplifies the task by focusing on detecting abnormal ECGs rather than diagnosing specific conditions. Such an approach aligns with real-world applications where the goal is often to flag unusual signals for further examination by medical professionals.
-<figure>
-    <img src="report_images/signals_plot.png" alt="anomaly detection" title="anomaly detection">
-    <figcaption>Plot of the ECG data (green: normal signals; red: anomalies).</figcaption>
-</figure>
 
 ## Time series anomaly detection using autoencoders
 
@@ -87,11 +83,11 @@ At inference time, the autoencoder trained on normal signals collected in the da
 
 2. The Cumulative Density Function of $\pi_{\mathcal D}$ is computed. More precisely, given a new time series $x$, $1-\text{CDF}\_{\pi\_{\mathcal D}}(d(x)) = 1-\mathbb P\_{\pi\_{\mathcal D}}(d(z) \leq d(x)) = P\_{\pi\_{\mathcal D}}(d(z) \geq d(x))$ where $d(z)$ is a random variable such that $d(z) \sim \pi_{\mathcal D}$.
 
-If $x$ is a normal signal, then $d(x)$ is a sample from $\pi_{\mathcal D}$. Consequently, we do not expect $1-\text{CDF}\_{\pi\_{\mathcal D}}(d(x))$ to be low, namely we do not expect $d(x)$ to be an outlier with respect to the distribution of the reconstruction losses of normal signals (i.e. $\pi\_{\mathcal D}$). Therefore:
+If $x$ is a normal signal and it has a shape coeherent with the ones of the normal signals in the training dataset, then $d(x)$ can be assumed to be a sample from $\pi_{\mathcal D}$. Consequently, we would not expect $1-\text{CDF}\_{\pi\_{\mathcal D}}(d(x))$ to be low, namely we would not expect $d(x)$ to be an outlier with respect to the distribution of the reconstruction losses of normal signals (i.e. $\pi\_{\mathcal D}$). Therefore:
 
 3. Set a (small) threshold $\alpha$. If $1-\text{CDF}\_{\pi\_{\mathcal D}}(d(x)) \leq \alpha$, then the new time series $x$ is flagged as an anomaly. 
 
-Notice that this anomaly detection pipeline returns a number in the $[0,1]$ interval (namely, $1-\text{CDF}\_{\pi\_{\mathcal D}}(d(x))$), which could be regarded as the "probability" that the new signal is anomalous. Ideally, this would be the final output of the pipeline, letting experts in the field actually have the last word on whether the given time series is atypical or not. If the data have been collected in the medical field, this option might be safer than relying on the chosen threshold $\alpha$. We choose to select a threshold and to actually flag time series as normal or anomalous for the purpose of evaluating the performance of the pipeline.
+Notice that this anomaly detection pipeline returns a number in the $[0,1]$ interval (namely, $1-\text{CDF}\_{\pi\_{\mathcal D}}(d(x))$), which could be regarded as the "probability" that the new signal is anomalous. Ideally, this would be the final output of the pipeline, letting experts in the field actually have the last word on whether the given time series is atypical or not. If the data have been collected in the medical field, this option might be safer than relying on the chosen threshold $\alpha$. We choose to select a threshold and to actually flag time series as normal or anomalous for the purpose of evaluating the performance of the pipeline. Finally, since the CDF of $\pi_{\mathcal D}$ is of course unknown in practice, we estimate it using the Empirial Cumulative Density Function.
 
 Remark: An alternative to this approach might be to compare the new time series $x$ and the normal signals in the dataset $\mathcal D$ through the embdedd features learned by the autoencoder. 
 
