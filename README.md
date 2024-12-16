@@ -3,5 +3,10 @@
 
 * **Project title**: Time series anomaly detection using Autoencoders
 * **Description**:
-* **Links**: [This](DONT_EDIT_report.md) is the file used during the presentation.
+* **Links**: The file [report.md](report.md) has been used during the presentation. Please refer to the file [docker.md](docker.md) for instructions on how to use docker to run this project (although not necessary). 
 * **Author's contribution**:
+    - Kasper Bågmark:
+    - Michele Di Sabato: 
+    - Erik Jansson:
+    - Peng Kuang:
+    - Selma Tabakovic:
