@@ -43,8 +43,36 @@ Then, given the parametrized coders $\varphi_E^{\theta_E}$ and $\varphi_D^{\thet
     <figcaption>Architecture of the autoencoder when selecting 10 components for the encoded features.</figcaption>
 </figure>
 
-## The dataset
-The raw data are collected in [this](https://www.physionet.org/content/chfdb/1.0.0/) repository, and they have originally been collected in [this work](http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&db=PubMed&list_uids=3950244&dopt=Abstract). The raw dataset includes long-term ECG recordings from 15 subjects (11 men, aged 22 to 71, and 4 women, aged 54 to 63) with severe congestive heart failure. The data have been furhter analyzed and preprocessed in [this work](https://link.springer.com/article/10.1007/s10618-014-0388-4): each heartbeat was extracted and the heartbeat length was equalized using interpolation. After that, 5,000 heartbeats were randomly selected. The dataset contains 2079 normal heartbeats. Anomalous heartbeats are further separated into 4 classes each corresponding to a specific heart condition. For our purposes, all anomalies are collected in one single class, as we decided not to detect a specific heart condition but rather just abnormal ECGs. Unfortunately, as far as we know, the raw data consists in a single, long sequence of evaluations of electrocardiograms. This means that we do not have access to individual heartbeats, but only to the 5000 randomly sampled signals.
+## Overview of the ECG5000 dataset
+
+Electrocardiograms (ECGs) are critical tools for diagnosing heart conditions such as arrhythmias, ischemia, and other cardiac abnormalities. ECG data is routinely collected in hospitals for patient monitoring. This makes it, in theory, suitable for developing machine learning models and deploying them in healthcare to assist physicians. Furthermore, the structured and repetitive nature of ECG signals makes them well-suited for models like autoencoders. Autoencoders excel at learning normal patterns from structured data, enabling the identification of deviations that can be flagged as anomalies for further review by physicians.
+
+<figure style="text-align: center;">
+    <img src="report_images/data.png" width="500" alt="Some normal and anomalous ECGs">
+    <figcaption>Some normal and anomalous ECGs.</figcaption>
+</figure>
+
+
+
+The ECG5000 dataset is a commonly used benchmark in the field of anomaly detection, particularly for detecting irregularities in heart function. The raw data is collected in [this](https://www.physionet.org/content/chfdb/1.0.0/) repository, and was originally collected in [this work](http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&db=PubMed&list_uids=3950244&dopt=Abstract). The raw dataset includes long-term ECG recordings from 15 subjects with severe congestive heart failure:
+- 11 men (aged 22 to 71).
+- 4 women (aged 54 to 63). 
+
+The data was further analyzed and preprocessed in [this work](https://link.springer.com/article/10.1007/s10618-014-0388-4), where the preprocessing pipeline consisted of the following three steps:
+
+1. Heartbeat Extraction: Individual heartbeats were extracted from the long ECG recordings.
+
+2. Length Equalization: Heartbeat lengths were equalized using interpolation, ensuring uniformity across the dataset.
+
+3. Random Sampling: A total of 5,000 heartbeats were randomly selected for the dataset. 
+
+Note that because the raw data consists of a single, long sequence of ECG evaluations, we only have access to the 5,000 randomly sampled signals, not individual heartbeats.
+
+The final dataset contains:
+- 2079 normal heartbeats.
+- 2921 anomalous heartbeats (categorized into 4 distinct classes, each representing a specific heart condition).
+
+For our purposes, all anomalies are collected in one single class. This decision simplifies the task by focusing on detecting abnormal ECGs rather than diagnosing specific conditions. Such an approach aligns with real-world applications where the goal is often to flag unusual signals for further examination by medical professionals.
 <figure>
     <img src="report_images/signals_plot.png" alt="anomaly detection" title="anomaly detection">
     <figcaption>Plot of the ECG data (green: normal signals; red: anomalies).</figcaption>
@@ -126,12 +154,6 @@ The data is partitioned in the preprocessing and each node is assigned one parti
 Running the ensemble on our own computer (laptop without GPUs `use_gpu = False`) , we see that we get best scaling by setting $N$ as the number of CPU cores. We set `local_mode = True`, otherwise the master node (i.e. the only node) will not work.
 
 In our main training function (where each node is working) we make use `local_rank = int(os.environ["LOCAL_RANK"])`. This retrieves which node that is working and in a very simple way we can collect the correct partition and model. Similarly, the model parameters are saved based on their `local_rank` to know which node it belongs to.
-
-## Discussion
-
-TODO: create actual ensemble / add proof of scalability / add check for node imbalance
-
-Neural networks in general and autoencoders can have surprisingly good out-of-sample performance, meaning that even if an autoencoder has not seen a type of anomalous time series, it could still reconstruct the anomalous time series. This in turn results in a low reconstruction performance, meaning that we do not detect the anomaly. For medical applications, one could ask, given this, if it is reasonable to still use autoencoders for anomaly detection purposes. On the one hand, a human interpreting ECG time series can also make mistakes, but on the other, the by some perceived objectivity of deep learning based methods could mean that life-threatening diseases are never diagnosed, and the patient is sent home, because "the computer is objective and cannot lie". 
 
 
 ## Final notes:
