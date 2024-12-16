@@ -15,8 +15,10 @@ In this project, we consider the problem of _anomaly detection_, i.e., to, given
 This can be various things, for instance, if the series contains outlier points, if a subset of the series does not fit in what one would expect, or, as is the case for us, if the series is entirely different in some sense from what is expected. 
 
 <figure style="text-align: center;">
-    <img src="report_images/GA1.png" alt="anomaly detection" title="anomaly detection">
-    <figcaption style="font-size: smaller;">Illustration of the anomaly detection procedure. The autoencoder is trained on the normal (green) data. The idea is that normal data will be accurately reconstructed, whereas anomalies are reconstructed poorly.</figcaption>
+    <img src="report_images/GA1.png"  width="800" alt="anomaly detection" title="anomaly detection">
+    <figcaption>
+        <sub>Illustration of the anomaly detection procedure. The autoencoder is trained on the normal (green) data. The idea is that normal data will be accurately reconstructed, whereas anomalies are reconstructed poorly.</sub>
+    </figcaption>
     <br>
 </figure>
 
@@ -40,8 +42,11 @@ In practice, this means selecting a data fidelity measure on $\mathcal{D}$, i.e.
 Then, given the parametrized coders $\varphi_E^{\theta_E}$ and $\varphi_D^{\theta_D}$, where $\theta_E$ and $\theta_D$ are the parameters of the functions indicated by their subscript, the training problem is to solve $\min_{\theta_E,\theta_D} \sum_{i=1}^N d(x_i,\varphi_D^{\theta_D}\circ \varphi_E^{\theta_E}(x_i)) := \min_{\theta_E,\theta_D} \text{loss}(\theta_E,\theta_D)$ where $\{x_i, i = 1,\ldots N\} \subset \mathcal D$ are the $N$ samples of the training data, e.g., the $N$ time series used to learn what a normal time series should look like. 
 
 <figure style="text-align: center;">
-    <img src="report_images/architecture.png">
-    <figcaption style="font-size: smaller;">Architecture of the autoencoder when selecting 10 components for the encoded features.</figcaption>
+    <img src="report_images/architecture.png" width="500" >
+    <figcaption>
+        <sub>Architecture of the autoencoder when selecting 10 components for the encoded features.</sub>
+    </figcaption>
+    <br>
 </figure>
 
 ## Overview of the ECG5000 dataset
@@ -50,9 +55,11 @@ Electrocardiograms (ECGs) are critical tools for diagnosing heart conditions suc
 
 <figure style="text-align: center;">
     <img src="report_images/data.png" width="500" alt="Some normal and anomalous ECGs">
-    <figcaption style="font-size: smaller;">Some normal and anomalous ECGs.</figcaption>
+    <figcaption>
+        <sub>Some normal and anomalous ECGs.</sub>
+    </figcaption>
+    <br>
 </figure>
-
 
 
 The ECG5000 dataset is a commonly used benchmark in the field of anomaly detection, particularly for detecting irregularities in heart function. The raw data is collected in [this](https://www.physionet.org/content/chfdb/1.0.0/) repository, and was originally collected in [this work](http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&db=PubMed&list_uids=3950244&dopt=Abstract). The raw dataset includes long-term ECG recordings from 15 subjects with severe congestive heart failure:
