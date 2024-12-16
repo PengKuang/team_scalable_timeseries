@@ -43,6 +43,12 @@ Then, given the parametrized coders $\varphi_E^{\theta_E}$ and $\varphi_D^{\thet
     <figcaption>Architecture of the autoencoder when selecting 10 components for the encoded features.</figcaption>
 </figure>
 
+## The dataset
+The raw data are collected in [this](https://www.physionet.org/content/chfdb/1.0.0/) repository, and they have originally been collected in [this work](http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&db=PubMed&list_uids=3950244&dopt=Abstract). The raw dataset includes long-term ECG recordings from 15 subjects (11 men, aged 22 to 71, and 4 women, aged 54 to 63) with severe congestive heart failure. The data have been furhter analyzed and preprocessed in [this work](https://link.springer.com/article/10.1007/s10618-014-0388-4): each heartbeat was extracted and the heartbeat length was equalized using interpolation. After that, 5,000 heartbeats were randomly selected. The dataset contains 2079 normal heartbeats. Anomalous heartbeats are further separated into 4 classes each corresponding to a specific heart condition. For our purposes, all anomalies are collected in one single class, as we decided not to detect a specific heart condition but rather just abnormal ECGs. Unfortunately, as far as we know, the raw data consists in a single, long sequence of evaluations of electrocardiograms. This means that we do not have access to individual heartbeats, but only to the 5000 randomly sampled signals.
+<figure>
+    <img src="report_images/signals_plot.png" alt="anomaly detection" title="anomaly detection">
+    <figcaption>Plot of the ECG data (green: normal signals; red: anomalies).</figcaption>
+</figure>
 
 ## Time series anomaly detection using autoencoders
 
@@ -60,13 +66,6 @@ If $x$ is a normal signal, then $d(x)$ is a sample from $\pi_{\mathcal D}$. Cons
 Notice that this anomaly detection pipeline returns a number in the $[0,1]$ interval (namely, $1-\text{CDF}\_{\pi\_{\mathcal D}}(d(x))$), which could be regarded as the "probability" that the new signal is anomalous. Ideally, this would be the final output of the pipeline, letting experts in the field actually have the last word on whether the given time series is atypical or not. If the data have been collected in the medical field, this option might be safer than relying on the chosen threshold $\alpha$. We choose to select a threshold and to actually flag time series as normal or anomalous for the purpose of evaluating the performance of the pipeline.
 
 Remark: An alternative to this approach might be to compare the new time series $x$ and the normal signals in the dataset $\mathcal D$ through the embdedd features learned by the autoencoder. 
-
-## The dataset
-The raw data are collected in [this](https://www.physionet.org/content/chfdb/1.0.0/) repository, and they have originally been collected in [this work](http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&db=PubMed&list_uids=3950244&dopt=Abstract). The raw dataset includes long-term ECG recordings from 15 subjects (11 men, aged 22 to 71, and 4 women, aged 54 to 63) with severe congestive heart failure. The data have been furhter analyzed and preprocessed in [this work](https://link.springer.com/article/10.1007/s10618-014-0388-4): each heartbeat was extracted and the heartbeat length was equalized using interpolation. After that, 5,000 heartbeats were randomly selected. The dataset contains 2079 normal heartbeats. Anomalous heartbeats are further separated into 4 classes each corresponding to a specific heart condition. For our purposes, all anomalies are collected in one single class, as we decided not to detect a specific heart condition but rather just abnormal ECGs. Unfortunately, as far as we know, the raw data consists in a single, long sequence of evaluations of electrocardiograms. This means that we do not have access to individual heartbeats, but only to the 5000 randomly sampled signals.
-<figure>
-    <img src="report_images/signals_plot.png" alt="anomaly detection" title="anomaly detection">
-    <figcaption>Plot of the ECG data (green: normal signals; red: anomalies).</figcaption>
-</figure>
 
 ## Scalability
 
@@ -92,7 +91,7 @@ The process proceeds by letting
     * Fault Tolerance: The system continues to function (for inference) effectively even if one or more nodes fail.
     * Dynamic Scaling: As datasets grow, additional nodes can be incorporated to maintain performance.
 
-This approach works for any type of data partitioning, constituting a type of distributed deep learning called Distributed Data Parallel (DDP). In our application with ECG data, we assume the data is managed by a centralized healthcare system, for instance, www.1177.se. The dataset contains the nation's patient records of ten years. It is too big for a single node or cluster at 1177 to train. Although vertical scaling at 1177 is possible, it can still take too long to complete the training or simply cost too much to upgrade the infrastructure. Therefore, the better option is that 1177 acts as a driver to distribute the training job to the hospitals that already have some available, existing infrastructure. Further, 1177 can easily prescribe and actualize that each hospital trains the model with its own ECG data. That is, the hospital can only access the ECG data originally submitted to 1177 by itself. This approach preserves patients' privacy. Meanwhile, hospitals benefit from sharing a model that is well-trained with all the data.
+In our application with ECG data, we assume the data is managed by a centralized healthcare system, for instance, www.1177.se. The dataset contains the nation's patient records of ten years. It is too big for a single node or cluster at 1177 to train. Although vertical scaling at 1177 is possible, it can still take too long to complete the training or simply cost too much to upgrade the infrastructure. Therefore, the better option is that 1177 acts as a driver to distribute the training job to the hospitals that already have some available, existing infrastructure. Further, 1177 can easily prescribe and actualize that each hospital trains the model with its own ECG data. That is, the hospital can only access the ECG data originally submitted to 1177 by itself. This approach preserves patients' privacy. Meanwhile, hospitals benefit from sharing a model that is well-trained with all the data.
 
 We would like to train a copy of the shared model at each hospital with its own data. Implemented by TorchDistributor, the gradients from each node will be averaged and synchronized through interprocess communications, and then used to update the local model replica. This enables each worker node (hospital) to process new data to evaluate anomalies locally during the inference stage. It again enforces privacy preservation.
 
