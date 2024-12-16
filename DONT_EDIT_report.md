@@ -31,8 +31,7 @@ In this project, however, we will avoid the modeling step and instead take a ful
 Autoencoders are neural networks that are used to learn embeddings of unlabeled data. 
 An autoencoder consists of two networks, the _encoder_ and the _decoder_. 
 The encoder learns a representation of the input data into some latent space, and the decoder learns to reconstruct the input data from the representations. 
-Formally, the autoencoder consists of a $4$-tuple $(\mathcal D,\mathcal E,\varphi_E,\varphi_D)$.
- $\mathcal D$ is the data space (in our case, the space of time series of a certain length), and $\mathcal E$ is the latent space of representations, in our case chosen to be a Euclidean space of dimension $n$. 
+Formally, the autoencoder consists of a $4$-tuple $(\mathcal D,\mathcal E,\varphi_E,\varphi_D)$. $\mathcal D$ is the data space (in our case, the space of time series of a certain length), and $\mathcal E$ is the latent space of representations, in our case chosen to be a Euclidean space of dimension $n$. 
 Further, $\varphi_E\colon \mathcal D \to \mathcal E$ is the _encoder_ and $\varphi_D\colon \mathcal E \to \mathcal D$ is the _decoder_. 
 
 The mappings $\varphi_E$ and $\varphi_D$ are parametrized by neural networks. 
@@ -41,11 +40,7 @@ In our case, both networks have a simple architecture: they are standard multila
 
 To train the autoencoder, it is assigned a task to solve. 
 In practice, this means selecting a data fidelity measure on $\mathcal{D}$, i.e., a function $d\colon \mathcal{D} \times \mathcal{D} \to \mathbb R$.
-Then, given the parametrized coders $\varphi_E^{\theta_E}$ and $\varphi_D^{\theta_D}$, where $\theta_E$ and $\theta_D$ are the parameters of the functions indicated by their subscript, the training problem is to solve
-$
-\min_{\theta_E,\theta_D} \sum_{i=1}^N d(x_i,\varphi_D^{\theta_D}\circ \varphi_E^{\theta_E}(x_i)) := \min_{\theta_E,\theta_D} \text{loss}(\theta_E,\theta_D)
-$
-where $\{x_i, i = 1,\ldots N\} \subset \mathcal D$ are the $N$ samples of the training data, e.g., the $N$ time series used to learn what a normal time series should look like. 
+Then, given the parametrized coders $\varphi_E^{\theta_E}$ and $\varphi_D^{\theta_D}$, where $\theta_E$ and $\theta_D$ are the parameters of the functions indicated by their subscript, the training problem is to solve $\min_{\theta_E,\theta_D} \sum_{i=1}^N d(x_i,\varphi_D^{\theta_D}\circ \varphi_E^{\theta_E}(x_i)) := \min_{\theta_E,\theta_D} \text{loss}(\theta_E,\theta_D)$ where $\{x_i, i = 1,\ldots N\} \subset \mathcal D$ are the $N$ samples of the training data, e.g., the $N$ time series used to learn what a normal time series should look like. 
 
 <figure>
     <img src="report_images/network.png">
@@ -59,7 +54,8 @@ The autoncoder is trained on normal, non-anomalous time series, collected in the
 
 At inference time, the autoencoder trained on normal signals collected in the dataset $\mathcal D$ is given as input a new time series $\tilde{x}$, that is then mapped to its latent representation and then reconstructed back to $\varphi_D ( \varphi_E(\tilde{x}))$. The technique that we use to understand if the given signal is anomalous or not works in this way. 
 1.  We compute the distribution of the reconstruction losses on the training set, namely the distribution of $\{d(z, \varphi_D ( \varphi_E(z))) \ \forall z \in \mathcal D\}$. For ease of notation, we re-define $d(\cdot, \varphi_D ( \varphi_E(\cdot)))$ as $d(\cdot)$ and by $d(\mathcal D)$ we mean the collection of the reconstruction losses on the training set $\mathcal D$. Moreover, we indicate the distribution of $d(\mathcal D)$ with $\pi_{\mathcal D}$. Notice that the support of this distribution is the set of positive real numbers.
-2. The Cumulative Density Function of $\pi_{\mathcal D}$ is computed. More precisely, given a new time series $x$, $1-\text{CDF}_{\pi_{\mathcal D}}(d(x)) = 1-\mathbb P_{\pi_{\mathcal D}}(d(z) \leq d(x)) = P_{\pi_{\mathcal D}}(d(z) \geq d(x))$ where $d(z)$ is a random variable such that $d(z) \sim \pi_{\mathcal D}$.
+
+2. The Cumulative Density Function of $\pi_{\mathcal D}$ is computed. More precisely, given a new time series $x$, $1-\text{CDF}\_{\pi\_{\mathcal D}}(d(x)) = 1-\mathbb P\_{\pi\_{\mathcal D}}(d(z) \leq d(x)) = P\_{\pi\_{\mathcal D}}(d(z) \geq d(x))$ where $d(z)$ is a random variable such that $d(z) \sim \pi_{\mathcal D}$.
 
 If $x$ is a normal signal, then $d(x)$ is a sample from $\pi_{\mathcal D}$. Consequently, we do not expect $1-\text{CDF}_{\pi_{\mathcal D}}(d(x))$ to be low, namely we do not expect $d(x)$ to be an outlier with respect to the distribution of the reconstruction losses of normal signals (i.e. $\pi_{\mathcal D}$). Therefore:
 
