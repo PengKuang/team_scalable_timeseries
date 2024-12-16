@@ -49,28 +49,9 @@ Then, given the parametrized coders $\varphi_E^{\theta_E}$ and $\varphi_D^{\thet
 </p>
 
 ## Overview of the ECG5000 dataset
+Electrocardiograms (ECGs) are recordings of the electrical activity of the heart, providing vital information about its rhythm and health. Specifically, they are graphs of the heart's electrical voltage over time, measured through electrodes placed on the skin. ECGs are critical tools for diagnosing a range of heart conditions, such as arrhythmias (irregular heartbeats), ischemia (restricted blood flow to the heart), and other cardiac abnormalities. These anomalies often manifest as deviations in the normal trends of the ECG signals.
 
-Electrocardiograms (ECGs) are critical tools for diagnosing heart conditions such as arrhythmias, ischemia, and other cardiac abnormalities. ECG data is routinely collected in hospitals for patient monitoring. This makes it, in theory, suitable for developing machine learning models and deploying them in healthcare to assist physicians. Furthermore, the structured and repetitive nature of ECG signals makes them well-suited for models like autoencoders. Autoencoders excel at learning normal patterns from structured data, enabling the identification of deviations that can be flagged as anomalies for further review by physicians.
-
-The ECG5000 dataset is a commonly used benchmark in the field of anomaly detection, particularly for detecting irregularities in heart function. The raw data is collected in [this](https://www.physionet.org/content/chfdb/1.0.0/) repository, and was originally collected in [this work](http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&db=PubMed&list_uids=3950244&dopt=Abstract). The raw dataset includes long-term ECG recordings from 15 subjects with severe congestive heart failure:
-- 11 men (aged 22 to 71).
-- 4 women (aged 54 to 63). 
-
-The data was further analyzed and preprocessed in [this work](https://link.springer.com/article/10.1007/s10618-014-0388-4), where the preprocessing pipeline consisted of the following three steps:
-
-1. Heartbeat Extraction: Individual heartbeats were extracted from the long ECG recordings.
-
-2. Length Equalization: Heartbeat lengths were equalized using interpolation, ensuring uniformity across the dataset.
-
-3. Random Sampling: A total of 5,000 heartbeats were randomly selected for the dataset. 
-
-Note that because the raw data consists of a single, long sequence of ECG evaluations, we only have access to the 5,000 randomly sampled signals, not individual heartbeats.
-
-The final dataset contains:
-- 2079 normal heartbeats.
-- 2921 anomalous heartbeats (categorized into 4 distinct classes, each representing a specific heart condition).
-
-For our purposes, all anomalies are collected in one single class. This decision simplifies the task by focusing on detecting abnormal ECGs rather than diagnosing specific conditions. Such an approach aligns with real-world applications where the goal is often to flag unusual signals for further examination by medical professionals.
+ECG data is routinely collected in hospitals for patient monitoring, meaning there is, in theory, an abundance of data available for developing machine learning models. Furthermore, the structured and repetitive nature of ECG signals makes them well-suited for models like autoencoders, since autoencoders excel at learning normal patterns from structured data. If trained only on healthy ECGs, the autoencoder will struggle to accurately reconstruct anomalous signals, making deviations from the normal trends identifiable as anomalies. An anomaly detection system based on this data could significantly enhance patient care by serving as an alert system, flagging potential issues to support physicians in their diagnoses.
 
 <p align="center">
     <img src="report_images/data.png" width="500" alt="Some normal and anomalous ECGs">
@@ -78,6 +59,23 @@ For our purposes, all anomalies are collected in one single class. This decision
 <p align="center">
         <sub>Some normal and anomalous ECGs.</sub>
 </p>
+
+The ECG5000 dataset is a commonly used benchmark in the field of anomaly detection, particularly for detecting irregularities in heart function. The raw data is collected in [this](https://www.physionet.org/content/chfdb/1.0.0/) repository, and was originally collected in [this work](http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&db=PubMed&list_uids=3950244&dopt=Abstract). The raw dataset includes long-term ECG recordings from 15 subjects with severe congestive heart failure:
+- 11 men (aged 22 to 71).
+- 4 women (aged 54 to 63). 
+
+The data was further analyzed and preprocessed in [this work](https://link.springer.com/article/10.1007/s10618-014-0388-4), where the preprocessing pipeline consisted of the following three steps:
+1. Individual heartbeats were extracted from the long ECG recordings.
+2. Each heartbeat was adjusted to a length of 140 timesteps using interpolation.
+3. A total of 5,000 heartbeats were randomly selected for the dataset. 
+
+Note that because the raw data consists of a single, long sequence of ECG evaluations, we only have access to the 5,000 randomly sampled signals, not individual heartbeats.
+
+The final dataset contains:
+- 2079 normal heartbeats.
+- 2921 anomalous heartbeats (categorized into 4 distinct classes, each representing a specific heart condition).
+
+For our purposes, all anomalies are collected in one single class, which simplifies the task by focusing on detecting abnormal ECGs rather than diagnosing specific conditions. This also aligns with real-world applications where the goal is often to flag unusual signals for further examination by medical professionals.
 
 ## Time series anomaly detection using autoencoders
 
