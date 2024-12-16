@@ -10,8 +10,7 @@ A time series is a sequence of real data points indexed by time, i.e.,
 $
 (x_t,t \in \mathbb{T}), 
 $
-where $\mathbb{T}$ is an index set, for instance $\mathbb{T} = \{1,2,3,\ldots\}$
- Famous examples include series of temperature data collected for instance daily, or the closing stock price. 
+where $\mathbb{T}$ is an index set, for instance $\mathbb{T} = \{1,2,3,\ldots\}$. Famous examples include series of temperature data collected for instance daily, or the closing stock price. 
 Time series modeling is an important application of the theory of stochastic processes. 
 After fitting a stochastic process to the data, i.e., a sequence of random variables indexed by $\mathbb{T}$, the model can be used to answer several questions. 
 For instance, one may extract trend lines or seasonality (relevant in for instance financial or climate modeling) and perhaps most importantly, forecast the future. 
@@ -19,7 +18,10 @@ Time series models are usually (compared to deep models) simple and easy to fit,
 In this project, we consider the problem of _anomaly detection_, i.e., to, given a previous sample (i.e., training data) of different time series, detect if a new series is anomalous in some way. 
 This can be various things, for instance, if the series contains outlier points, if a subset of the series does not fit in what one would expect, or, as is the case for us, if the series is entirely different in some sense from what is expected. 
 
-![Illustration of the anomaly detection procedure. The autoencoder is trained on the normal (green) data. The idea is that normal data will be accurately reconstructed, whereas anomalies are reconstructed poorly.](report_images/GA1.png "anomaly detection")
+<figure>
+    <img src="report_images/GA1.png" alt="anomaly detection" title="anomaly detection">
+    <figcaption>Illustration of the anomaly detection procedure. The autoencoder is trained on the normal (green) data. The idea is that normal data will be accurately reconstructed, whereas anomalies are reconstructed poorly.</figcaption>
+</figure>
 
 One viable approach to this would be to fit a time series model to the training data, and using a statistical approach determine if the new series is different from what the model predicts. 
 In this project, however, we will avoid the modeling step and instead take a fully data-driven approach using a deep learning technique known as _autoencoders_. 
@@ -45,11 +47,17 @@ $
 $
 where $\{x_i, i = 1,\ldots N\} \subset \mathcal D$ are the $N$ samples of the training data, e.g., the $N$ time series used to learn what a normal time series should look like. 
 
+<figure>
+    <img src="report_images/network.png">
+    <figcaption>Architecture of the autoencoder when selecting 10 components for the encoded features.</figcaption>
+</figure>
+
+
 ## Time series anomaly detection using autoencoders
 
-The autoncoder is trained on normal, non-anomalous time series, collected in the dataset $\mathcal D$. Each time series is represented in a latent space $\mathcal E$ by the encoder and then the decoder is used to map $\mathcal E$ back to the time series given as input to the model. The underlying assumptiomn is that if the autoencder is fed an anomalous signal, then its reconstruction performance is poor, either because the latent representation of the anomalous signal differs from the one of the training samples or because the reconstruction loss of the abnormal signal is high. This assumption is motivated by the fact that the autoencoder is trained on normal signals.
+The autoncoder is trained on normal, non-anomalous time series, collected in the dataset $\mathcal D$. Each time series is represented in a latent space $\mathcal E$ by the encoder and then the decoder is used to map $\mathcal E$ back to the time series given as input to the model. The underlying assumption is that if the autoencder is fed an anomalous signal, then its reconstruction performance is poor, either because the latent representation of the anomalous signal differs from the one of the training samples or because the reconstruction loss of the abnormal signal is high. This assumption is motivated by the fact that the autoencoder is trained on normal signals.
 
-At inference time, the autoencoder trained on normal signals collected in the dataset $\mathcal D$ is given as input a new time series $\tilde{x_i}$, that is then mapped to its latent representation and then reconstructed back to $\varphi_D ( \varphi_E(\tilde{x_i}))$. The technique that we use to understand if the given signal is anomalous or not works in this way. 
+At inference time, the autoencoder trained on normal signals collected in the dataset $\mathcal D$ is given as input a new time series $\tilde{x}$, that is then mapped to its latent representation and then reconstructed back to $\varphi_D ( \varphi_E(\tilde{x}))$. The technique that we use to understand if the given signal is anomalous or not works in this way. 
 1.  We compute the distribution of the reconstruction losses on the training set, namely the distribution of $\{d(z, \varphi_D ( \varphi_E(z))) \ \forall z \in \mathcal D\}$. For ease of notation, we re-define $d(\cdot, \varphi_D ( \varphi_E(\cdot)))$ as $d(\cdot)$ and by $d(\mathcal D)$ we mean the collection of the reconstruction losses on the training set $\mathcal D$. Moreover, we indicate the distribution of $d(\mathcal D)$ with $\pi_{\mathcal D}$. Notice that the support of this distribution is the set of positive real numbers.
 2. The Cumulative Density Function of $\pi_{\mathcal D}$ is computed. More precisely, given a new time series $x$, $1-\text{CDF}_{\pi_{\mathcal D}}(d(x)) = 1-\mathbb P_{\pi_{\mathcal D}}(d(z) \leq d(x)) = P_{\pi_{\mathcal D}}(d(z) \geq d(x))$ where $d(z)$ is a random variable such that $d(z) \sim \pi_{\mathcal D}$.
 
@@ -62,7 +70,11 @@ Notice that this anomaly detection pipeline returns a number in the $[0,1]$ inte
 Remark: An alternative to this approach might be to compare the new time series $x$ and the normal signals in the dataset $\mathcal D$ through the embdedd features learned by the autoencoder. 
 
 ## The dataset
-The raw data are collected in [this](https://www.physionet.org/content/chfdb/1.0.0/) repository, and they have originally been collected in [this work](http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&db=PubMed&list_uids=3950244&dopt=Abstract). The raw dataset includes long-term ECG recordings from 15 subjects (11 men, aged 22 to 71, and 4 women, aged 54 to 63) with severe congestive heart failure. The data have been furhter analyzed and preprocessed in [this work](https://link.springer.com/article/10.1007/s10618-014-0388-4): each heartbeat was extracted and the heartbeat length was equalized using interpolation. After that, 5,000 heartbeats were randomly selected. The dataset contains 2079 normal heartbeats. Anomalous heartbeats are further separated into 4 classes each corresponding to a specific heart condition. For our purposes, all anomalies are collected in one single class, as we decided not to detect a specific heart condition but rather just abnormal ECGs. Unfortunately, as far as we know, the raw data consists in a single, long sequence of evaluations of electro cardiograms, meaning that we do not have access to individual heartbeats, but only to the 5000 randomly sampled signals.
+The raw data are collected in [this](https://www.physionet.org/content/chfdb/1.0.0/) repository, and they have originally been collected in [this work](http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&db=PubMed&list_uids=3950244&dopt=Abstract). The raw dataset includes long-term ECG recordings from 15 subjects (11 men, aged 22 to 71, and 4 women, aged 54 to 63) with severe congestive heart failure. The data have been furhter analyzed and preprocessed in [this work](https://link.springer.com/article/10.1007/s10618-014-0388-4): each heartbeat was extracted and the heartbeat length was equalized using interpolation. After that, 5,000 heartbeats were randomly selected. The dataset contains 2079 normal heartbeats. Anomalous heartbeats are further separated into 4 classes each corresponding to a specific heart condition. For our purposes, all anomalies are collected in one single class, as we decided not to detect a specific heart condition but rather just abnormal ECGs. Unfortunately, as far as we know, the raw data consists in a single, long sequence of evaluations of electrocardiograms. This means that we do not have access to individual heartbeats, but only to the 5000 randomly sampled signals.
+<figure>
+    <img src="report_images/signals_plot.png" alt="anomaly detection" title="anomaly detection">
+    <figcaption>Plot of the ECG data (green: normal signals; red: anomalies).</figcaption>
+</figure>
 
 ## Scalability
 
@@ -122,3 +134,25 @@ In our main training function (where each node is working) we make use `local_ra
 TODO: PLENTY OF RESEARCH SUGGESTS AUTOENCODERS IS NOT SUITABLE FOR THE APPLICATION: SHOULD WE DISCUSS THIS?
 
 Neural networks in general and autoencoders can have surprisingly good out-of-sample performance, meaning that even if an autoencoder has not seen a type of anomalous time series, it could still reconstruct the anomalous time series. This in turn results in a low reconstruction performance, meaning that we do not detect the anomaly. For medical applications, one could ask, given this, if it is reasonable to still use autoencoders for anomaly detection purposes. On the one hand, a human interpreting ECG time series can also make mistakes, but on the other, the by some perceived objectivity of deep learning based methods could mean that life-threatening diseases are never diagnosed, and the patient is sent home, because "the computer is objective and cannot lie". 
+
+
+## Final notes:
+
+### Collaboration Environment
+
+The technical stack we ustilize to set up our collaboration environment consists of **Docker** and **Github**.
+
+We chose Docker since we have hetogenious devices (4 Macs and 1 Windows) which suits containerization and it is widely used in the industry. We take it as a learning opportunity to increase our knowledge and extend our skillset. It further prevents dependency inconsistency and conflits.
+
+The development environment is built on top of an official pyspark docker image. Each team member can pull it down to their machine and run it locally for coding. 
+
+![Collaboration Environment](report_images/timeseries-dev-env-v2.png "Collaboration Environment")
+
+This ensures the team has an uniform development environment. Afterwards, the team members push their code to the git repository.
+
+### Choice of PySpark, PyTorch and TorchDistributor
+We chose PySpark as the framework to develop the scalable and distributed machine learning pipeline.
+
+We chose PyTorch to develop the model since we had two Macs with Apple M1 chip. Both experienced dependency compatibility issues with TensorFlow. 
+
+We investigated both TorchDistributor and Flower (a federated learning framework) for realizing distributed machine learning. We chose TorchDistributor because it is native to Pyspark and for its simplicity and brevity.
