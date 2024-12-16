@@ -72,7 +72,7 @@ The raw data are collected in [this](https://www.physionet.org/content/chfdb/1.0
 
 The primary objective of this project is to utilize an ensemble approach when the dataset exceeds the capacity of a single machine. Beyond handling large-scale data, adopting an ensemble model offers several advantages. Notably, it enables the application of a distributed learning framework, where worker nodes compute simple metrics (resulting in low transfer costs) and transmit them to the master node. This approach ensures data privacy by keeping sensitive information localized.
 
-We begin by outlining the ensemble approach. Consider a dataset $D$ with size $S_D$, and assume that a single node can feasibly train a model on data of size $S_1$ within a reasonable timeframe. If $S_D \leq S\_1 $, there is no need to employ an ensemble, and a single model can be trained on the entire dataset. However, if $S\_D > S\_1 $, we partition the dataset as $ D = \bigcup\_{i=1}^N D\_i $, dividing it into chunks $D_i$ such that $|D_i| \leq S\_1$, each of which fits within the capacity of a single node. Here, $N$ denotes the total number of nodes used.
+We begin by outlining the ensemble approach. Consider a dataset $D$ with size $S_D$, and assume that a single node can feasibly train a model on data of size $S_1$ within a reasonable timeframe. If $S_D \leq S\_1 $, there is no need to employ an ensemble, and a single model can be trained on the entire dataset. However, if $S\_D > S\_1 $, we partition the dataset as $ D = \bigcup \_{i=1}^N D\_i $, dividing it into chunks $D_i$ such that $|D_i| \leq S\_1$, each of which fits within the capacity of a single node. Here, $N$ denotes the total number of nodes used.
 
 
 The process proceeds by letting 
