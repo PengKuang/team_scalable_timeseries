@@ -31,6 +31,7 @@ def ddp_setup(rank, world_size):
     os.environ["MASTER_PORT"] = "12355"
     # torch.cuda.set_device(rank)
     device = torch.device(f"cpu:{rank}")
+    # init_process_group(backend="nccl", rank=rank, world_size=world_size)
     init_process_group(backend="gloo", rank=rank, world_size=world_size)
 
 class Trainer:
@@ -39,12 +40,14 @@ class Trainer:
         model: torch.nn.Module,
         train_data: DataLoader,
         optimizer: torch.optim.Optimizer,
-        gpu_id: int,
+        # gpu_id: int,
+        cpu_id: int,
         save_every: int,
     ) -> None:
-        self.gpu_id = gpu_id
+        # self.gpu_id = gpu_id
+        self.cpu_id = cpu_id
         # self.model = model.to(gpu_id)
-        self.model = model.to(torch.device(f"cpu:{gpu_id}"))
+        self.model = model.to(torch.device(f"cpu:{cpu_id}"))
         self.train_data = train_data
         self.optimizer = optimizer
         self.save_every = save_every
@@ -60,13 +63,13 @@ class Trainer:
 
     def _run_epoch(self, epoch):
         b_sz = len(next(iter(self.train_data))[0])
-        print(f"[CPU{self.gpu_id}] Epoch {epoch} | Batchsize: {b_sz} | Steps: {len(self.train_data)}")
+        print(f"[CPU{self.cpu_id}] Epoch {epoch} | Batchsize: {b_sz} | Steps: {len(self.train_data)}")
         self.train_data.sampler.set_epoch(epoch)
         for source, targets in self.train_data:
             # source = source.to(self.gpu_id)
             # targets = targets.to(self.gpu_id)
-            source = source.to(torch.device(f"cpu:{self.gpu_id}"))
-            targets = targets.to(torch.device(f"cpu:{self.gpu_id}"))
+            source = source.to(torch.device(f"cpu:{self.cpu_id}"))
+            targets = targets.to(torch.device(f"cpu:{self.cpu_id}"))
             self._run_batch(source, targets)
 
     def _save_checkpoint(self, epoch):
@@ -78,7 +81,7 @@ class Trainer:
     def train(self, max_epochs: int):
         for epoch in range(max_epochs):
             self._run_epoch(epoch)
-            if self.gpu_id == 0 and epoch % self.save_every == 0:
+            if self.cpu_id == 0 and epoch % self.save_every == 0:
                 self._save_checkpoint(epoch)
 
 
@@ -117,5 +120,5 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     # world_size = torch.cuda.device_count()
-    world_size = 4
+    world_size = 2
     mp.spawn(main, args=(world_size, args.save_every, args.total_epochs, args.batch_size), nprocs=world_size)
