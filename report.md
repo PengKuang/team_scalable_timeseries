@@ -41,13 +41,12 @@ To train the autoencoder, it is assigned a task to solve.
 In practice, this means selecting a data fidelity measure on $\mathcal{D}$, i.e., a function $d\colon \mathcal{D} \times \mathcal{D} \to \mathbb R$.
 Then, given the parametrized coders $\varphi_E^{\theta_E}$ and $\varphi_D^{\theta_D}$, where $\theta_E$ and $\theta_D$ are the parameters of the functions indicated by their subscript, the training problem is to solve $\min_{\theta_E,\theta_D} \sum_{i=1}^N d(x_i,\varphi_D^{\theta_D}\circ \varphi_E^{\theta_E}(x_i)) := \min_{\theta_E,\theta_D} \text{loss}(\theta_E,\theta_D)$ where $\{x_i, i = 1,\ldots N\} \subset \mathcal D$ are the $N$ samples of the training data, e.g., the $N$ time series used to learn what a normal time series should look like. 
 
-<figure style="text-align: center;">
-    <img src="report_images/architecture.png" width="500" >
-    <figcaption>
-        <sub>Architecture of the autoencoder when selecting 10 components for the encoded features.</sub>
-    </figcaption>
-    <br>
-</figure>
+<p align="center">
+  <img src="report_images/architecture.png" width="500" />
+</p>
+<p align="center">
+  <sub>Architecture of the autoencoder when selecting 10 components for the encoded features.</sub>
+</p>
 
 ## Overview of the ECG5000 dataset
 
