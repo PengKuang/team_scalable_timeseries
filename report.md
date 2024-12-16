@@ -16,7 +16,8 @@ This can be various things, for instance, if the series contains outlier points,
 
 <figure>
     <img src="report_images/GA1.png" alt="anomaly detection" title="anomaly detection">
-    <figcaption>Illustration of the anomaly detection procedure. The autoencoder is trained on the normal (green) data. The idea is that normal data will be accurately reconstructed, whereas anomalies are reconstructed poorly.</figcaption>
+    <figcaption style="font-size: smaller;">Illustration of the anomaly detection procedure. The autoencoder is trained on the normal (green) data. The idea is that normal data will be accurately reconstructed, whereas anomalies are reconstructed poorly.</figcaption>
+    <br>
 </figure>
 
 One viable approach to this would be to fit a time series model to the training data, and using a statistical approach determine if the new series is different from what the model predicts. 
@@ -40,7 +41,7 @@ Then, given the parametrized coders $\varphi_E^{\theta_E}$ and $\varphi_D^{\thet
 
 <figure>
     <img src="report_images/architecture.png">
-    <figcaption>Architecture of the autoencoder when selecting 10 components for the encoded features.</figcaption>
+    <figcaption style="font-size: smaller;">Architecture of the autoencoder when selecting 10 components for the encoded features.</figcaption>
 </figure>
 
 ## Overview of the ECG5000 dataset
@@ -49,7 +50,7 @@ Electrocardiograms (ECGs) are critical tools for diagnosing heart conditions suc
 
 <figure style="text-align: center;">
     <img src="report_images/data.png" width="500" alt="Some normal and anomalous ECGs">
-    <figcaption>Some normal and anomalous ECGs.</figcaption>
+    <figcaption style="font-size: smaller;">Some normal and anomalous ECGs.</figcaption>
 </figure>
 
 
