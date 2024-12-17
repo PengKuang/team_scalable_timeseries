@@ -119,8 +119,8 @@ The process proceeds by letting
     2. Node $i$ receives the $i$-th batch $D\_{test}^{i}$ 
     3. Node $i$ evalutes and returns $f\_{AD}(m\_i(D\_{test}^{i}))$ to master node, $i=1,\dots,N$, ($AD$ = Anomaly detection)
     4. Master node evaluates the mean (or anything else)
-       $$\text{Output} = \frac{1}{N}\sum\_{i=1}^{N} f\_{AD}(m\_i(D\_{test}))$$
-          
+       $$\text{Output} = \frac{1}{N}\sum\_{i=1}^{N} f\_{AD}(m\_i(D\_{test}^{i}))$$
+
 (Note that the output can either be a single value representing an inference for the entire dataset or be evaluated pointwise, providing individual inference values for each data point.)
 
 The following figure summerizes how scalability is implemented:
