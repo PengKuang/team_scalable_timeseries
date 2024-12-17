@@ -126,7 +126,7 @@ In this report, we focus on time series data from a single ECG dataset. To devel
 
 Below we describe how we implement TorchDistributor and how we use it:
 
-More information can be found [databricks.com/TorchDistributor](https://www.databricks.com/blog/2023/04/20/pytorch-databricks-introducing-spark-pytorch-distributor.html), and from the links within. Below we briefly explain the main structure, mostly cited from the databricks link. The following figure shows hoe `TorchDistributor` works:
+More information can be found [databricks.com/TorchDistributor](https://www.databricks.com/blog/2023/04/20/pytorch-databricks-introducing-spark-pytorch-distributor.html), [Distributed Data Parallel in PyTorch Tutorial](https://youtube.com/playlist?list=PL_lsbAsL_o2CSuhUhJIiW0IkdT5C2wGWj&si=6llxA8Hbk71qeK_-), and from the links within. Below we briefly explain the main structure, mostly cited from the databricks link. The following figure shows hoe `TorchDistributor` works:
 
 <p align="center">
   <img src="./report_images/timeseries-ddp.png" width="700" />
@@ -180,7 +180,7 @@ The development environment is built on top of an official pyspark docker image.
 This ensures the team has an uniform development environment. Afterwards, the team members push their code to the git repository.
 
 <p align="center">
-  <img src="report_images/timeseries-dev-env-v2.png" width="700" />
+  <img src="report_images/timeseries-dev-env.png" width="700" />
 </p>
 <p align="center">
   <sub>Overview of collaboration environment.</sub>
@@ -191,4 +191,4 @@ We chose PySpark as the framework to develop the scalable and distributed machin
 
 We chose PyTorch to develop the model since we had two Macs with Apple M1 chip. Both experienced dependency compatibility issues with TensorFlow. 
 
-We investigated both TorchDistributor and Flower (a federated learning framework) for realizing distributed machine learning. We chose TorchDistributor because it is native to Pyspark and for its simplicity and brevity.
+We investigated both TorchDistributor and Flower (a federated learning framework) for realizing distributed machine learning. We chose TorchDistributor because it is native to PySpark and for its simplicity and brevity.
