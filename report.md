@@ -115,6 +115,15 @@ The process proceeds by letting
    
 (Note that the output can either be a single value representing an inference for the entire dataset or be evaluated pointwise, providing individual inference values for each data point.)
 
+The following figure summerizes how scalability is implemented:
+<p align="center">
+  <img src="./report_images/GA2.png" width="700" />
+</p>
+<p align="center">
+  <sub>Pipeline of Ensemble Anomaly Detection.</sub>
+</p>
+
+
     * Fault Tolerance: The system continues to function (for inference) effectively even if one or more nodes fail.
     * Dynamic Scaling: As datasets grow, additional nodes can be incorporated to maintain performance.
 
@@ -158,14 +167,6 @@ The data is partitioned in the preprocessing and each node is assigned one parti
 Running the ensemble on our own computer (laptop without GPUs `use_gpu = False`) , we see that we get best scaling by setting $N$ as the number of CPU cores. We set `local_mode = True`, otherwise the master node (i.e. the only node) will not work.
 
 In our main training function (where each node is working) we make use `local_rank = int(os.environ["LOCAL_RANK"])`. This retrieves which node that is working and in a very simple way we can collect the correct partition and model. Similarly, the model parameters are saved based on their `local_rank` to know which node it belongs to.
-
-The following figure summerizes how scalability is implemented:
-<p align="center">
-  <img src="./report_images/GA2.png" width="700" />
-</p>
-<p align="center">
-  <sub>Pipeline of Ensemble Anomaly Detection.</sub>
-</p>
 
 ## Final notes:
 
