@@ -115,9 +115,9 @@ The process proceeds by letting
     2. Node $i$ defines a model $m\_i$, $i=1,\dots,N$
     3. Model $m_i$ is trained on $D\_i$ until some criteria is met, $i=1,\dots,N$
 2. Inference
-    1. The master node is fed a set (possibly single element) $D\_{test}$ to perform TASK (Anomaly detection) and partitions it into $N$ batches $\{D\_{test}^{i}\}$ $i=1,\dots,N$
-    2. Node $i$ receives the $i$-th batch $D\_{test}^{i}$ 
-    3. Node $i$ evalutes and returns $f\_{AD}(m\_i(D\_{test}^{i}))$ to master node, $i=1,\dots,N$, ($AD$ = Anomaly detection)
+    1. The master node is fed a set (possibly single element) $D\_{test}$ to perform TASK (Anomaly detection)
+    2. Assuming $|D\_{test}| < S\_1 $, we send the whole set to each node $i$, $i=1,\dots,N$, otherwise we do a partition and send one partion at a time
+    3. Node $i$ evalutes and returns $f\_{AD}(m\_i(D\_{test}))$ to master node, $i=1,\dots,N$, ($AD$ = Anomaly detection)
     4. Master node evaluates the mean (or anything else)
        $$\text{Output} = \frac{1}{N}\sum\_{i=1}^{N} f\_{AD}(m\_i(D\_{test}^{i}))$$
 
