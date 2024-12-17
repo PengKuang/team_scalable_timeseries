@@ -149,7 +149,9 @@ result = TorchDistributor(
             <args>     )  # The arguments that should be passed to each node
 ```
 
-In our setting, we will let the function, "training", be a function that trains one model with one partitioned data set. <args> will contain training instructions, such as epochs to run, learning rate and other hyperparameters we might want to tune. 
+In our setting, we will let the function, "training", be a function that trains one model with one partitioned data set. <args> will contain training instructions, such as epochs to run, learning rate and other hyperparameters we might want to tune.[^1]
+
+[^1]: We note that one could similarly define an inference function that TorchDistributor distributes to each node to evaluate test data at inference time. However, in our code this is simplified by letting the master node evaluate all the models.
 
 The data is partitioned in the preprocessing and each node is assigned one partition. The models are either created at this stage or initialized in the "training" function.
 
