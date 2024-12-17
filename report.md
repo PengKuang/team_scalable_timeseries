@@ -158,15 +158,13 @@ result = TorchDistributor(
             <args>     )  # The arguments that should be passed to each node
 ```
 
-In our setting, we will let the function, "training", be a function that trains one model with one partitioned data set. <args> will contain training instructions, such as epochs to run, learning rate and other hyperparameters we might want to tune.[^1]
-
-[^1]: We note that one could similarly define an inference function that TorchDistributor distributes to each node to evaluate test data at inference time. However, in our code this is simplified by letting the master node evaluate all the models.
+In our setting, we will let the function, "training", be a function that trains one model with one partitioned data set. <args> will contain training instructions, such as epochs to run, learning rate and other hyperparameters we might want to tune.
 
 The data is partitioned in the preprocessing and each node is assigned one partition. The models are either created at this stage or initialized in the "training" function.
 
 Running the ensemble on our own computer (laptop without GPUs `use_gpu = False`) , we see that we get best scaling by setting $N$ as the number of CPU cores. We set `local_mode = True`, otherwise the master node (i.e. the only node) will not work.
 
-In our main training function (where each node is working) we make use `local_rank = int(os.environ["LOCAL_RANK"])`. This retrieves which node that is working and in a very simple way we can collect the correct partition and model. Similarly, the model parameters are saved based on their `local_rank` to know which node it belongs to.
+In our main training function (where each node is working) we make use `local_rank = int(os.environ["LOCAL_RANK"])`. This retrieves which node that is working and in a very simple way we can collect the correct partition and model. Similarly, the model parameters are saved based on their `local_rank` to know which node it belongs to. Similarly, we define an inference function that is distributed with TorchDistributor.
 
 ## Final notes:
 
