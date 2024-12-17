@@ -79,6 +79,13 @@ For our purposes, all anomalies are collected in one single class, which simplif
 
 ## Time series anomaly detection using autoencoders
 
+<p align="center">
+  <img src="./report_images/cdf.png" width="900" />
+</p>
+<p align="center">
+  <sub>Summary of anomaly score.</sub>
+</p>
+
 The autoencoder is trained on normal, non-anomalous time series, collected in the dataset $\mathcal D$. Each time series is represented in a latent space $\mathcal E$ by the encoder and then the decoder is used to map $\mathcal E$ back to the time series given as input to the model. The underlying assumption is that if the autoencder is fed an anomalous signal, then its reconstruction performance is poor, either because the latent representation of the anomalous signal differs from the one of the training samples or because the reconstruction loss of the abnormal signal is high. This assumption is motivated by the fact that the autoencoder is trained on normal signals.
 
 At inference time, the autoencoder trained on normal signals collected in the dataset $\mathcal D$ is given as input a new time series $\tilde{x}$, that is then mapped to its latent representation and then reconstructed back to $\varphi_D ( \varphi_E(\tilde{x}))$. The technique that we use to understand if the given signal is anomalous or not works in this way. 
