@@ -1,13 +1,2 @@
 .DS_Store
-.ipynb_checkpoints/
-results/
-trained_networks/
-tests_cluster/
-*.dat
-*.ecg
-*.hea
-*.hea-
-workbench.ipynb
-gitignore_folder/
-checkpoint.pt
-changes.patch
+models_and_results/
