@@ -144,7 +144,7 @@ Below we describe how we implement TorchDistributor and how we use it:
 More information can be found [databricks.com/TorchDistributor](https://www.databricks.com/blog/2023/04/20/pytorch-databricks-introducing-spark-pytorch-distributor.html), [Distributed Data Parallel in PyTorch Tutorial](https://youtube.com/playlist?list=PL_lsbAsL_o2CSuhUhJIiW0IkdT5C2wGWj&si=6llxA8Hbk71qeK_-), and from the links within. Below we briefly explain the main structure, mostly cited from the databricks link. The following figure shows how `TorchDistributor` works:
 
 <p align="center">
-  <img src="./report_images/timeseries-ddp.png" width="700" />
+  <img src="./report_images/timeseries-TD.png" width="700" />
 </p>
 <p align="center">
   <sub>Scalability through `TorchDistributor`.</sub>

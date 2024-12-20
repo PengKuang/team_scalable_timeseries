@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+	<html class="sl-root decks export offline loaded">
+	<head>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover, minimal-ui">
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<meta name="mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+		<link rel="manifest" href='data:application/manifest+json,{"display": "standalone", "name": "Anomaly detection for heart rate data"}' />
+		<title>Anomaly detection for heart rate data</title>
+
+
+		<link rel="stylesheet" type="text/css" href="lib/offline-v2.css">
+
+
+
+	</head>
+	<body class="reveal-viewport theme-font-montserrat theme-color-white-blue">
+		<div class="reveal">
+			<div class="slides">
+				<section data-id="93148840603df814cf9d96aec3384f37"><div class="sl-block" data-block-type="text" style="width: 806px; left: 77px; top: 42.5px; height: auto;" data-block-id="faf89d4b8e3bd3c885250a7a734f22a0"><div class="sl-block-content" data-placeholder-tag="h1" data-placeholder-text="Title Text" style="z-index: 10;" data-lt-tmp-id="lt-951213" data-gramm="false"><h1>Anomaly detection for heart rate data</h1></div></div>
+<div class="sl-block" data-block-type="text" style="height: auto; width: 600px; left: 180px; top: 330.5px;" data-name="text-80a057" data-block-id="48f2270324d59babcdb018a65bfedccf"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 11;">
+<p>Kasper Bågmark, Chalmers University</p>
+
+<p>Erik Jansson, Chalmers University</p>
+
+<p>Peng Kuang, Lund University</p>
+
+<p>Michele Di Sabato, Umeå University</p>
+
+<p>Selma Tabakovich, Chalmers University</p>
+
+<p> </p>
+</div></div></section><section data-id="a795f470835066bd3f33fb791690b11d"><div class="sl-block" data-block-type="text" style="width: 883px; left: 46px; top: 0px; height: auto;" data-block-id="3d51cf0fdf77b851732bde7b45b626af"><div class="sl-block-content" data-placeholder-tag="h1" data-placeholder-text="Title Text" data-gramm="false" style="z-index: 10;" data-lt-tmp-id="lt-408428"><h2>Heart rate data are <em>time series</em>
+</h2></div></div>
+<div class="sl-block" data-block-type="math" style="width: auto; height: auto; left: 308.5px; top: 91.5px;" data-name="math-031b88" data-block-id="254a6f42e681525e4f4d95454c6d7c47"><div class="sl-block-content notranslate" data-math-display="true" style="z-index: 11;"><div class="math-input">\{x_t, t = 1,\ldots n \}</div></div></div>
+<div class="sl-block" data-block-type="image" style="width: 348px; height: 348px; left: 509.25px; top: 182px; min-width: 1px; min-height: 1px;" data-name="image-d6cbae" data-block-id="b7ef6bbc03e23f4d7eb217b8642eaf2f"><div class="sl-block-content fragment" style="z-index: 12;" data-fragment-index="0"><img class="" data-natural-width="1200" data-natural-height="1200" data-lazy-loaded="" data-src="anomaly-detection-for-heart-rate-data/40db313b8fbf55e588bbdeca8a9fa504.png"></div></div>
+<div class="sl-block" data-block-type="image" style="width: 304px; height: 166px; left: 193.25px; top: 413px; min-width: 1px; min-height: 1px;" data-name="image-bbc149" data-block-id="72565a542f6357806425dc7497b85b31"><div class="sl-block-content fragment" style="z-index: 13;" data-fragment-index="2"><img class="" data-natural-width="304" data-natural-height="166" data-lazy-loaded="" data-src="anomaly-detection-for-heart-rate-data/84d86c87a9c48bf82a7113900f551a7c.png"></div></div>
+<div class="sl-block" data-block-type="image" style="width: 282.25px; height: 182.097px; left: 117.75px; top: 199.452px; min-width: 1px; min-height: 1px;" data-name="image-79608a" data-block-id="94cb40b9e6d132ca51dfbc7cb34796e6"><div class="sl-block-content fragment" style="z-index: 14;" data-fragment-index="1"><img class="" data-natural-width="279" data-natural-height="180" data-lazy-loaded="" data-src="anomaly-detection-for-heart-rate-data/33c96a51890fb01a100ac584fa0593a4.png"></div></div>
+<div class="sl-block" data-block-type="text" style="height: auto; width: 600px; left: 181px; top: 153.5px;" data-name="text-67b831" data-block-id="4688a05fd0c80dbe95873db8166f9c2f"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 15;"><p>Time series</p></div></div>
+<div class="sl-block sl-block-group" data-block-type="group" data-name="group-2a7e21" data-block-id="1b02820baecbabf7d86f6b324a2ffdd0"><div class="sl-block-content sl-block-group-content" style="transform-origin: 487.5px 644px 0px; z-index: 16;">
+<div class="sl-block" data-block-type="math" style="width: auto; height: auto; left: 316px; top: 588px;" data-block-id="4ddcdcd18f6dd0c07cf87dc7fc420716" data-name="math-af58f9"><div class="sl-block-content notranslate fragment" data-math-display="true" style="z-index: 17;" data-fragment-index="3"><div class="math-input">\{X_t, t = 1,\ldots n \}</div></div></div>
+<div class="sl-block" data-block-type="text" style="height: auto; width: 600px; left: 187.5px; top: 661px;" data-block-id="e8e0f854b72c2bacfa359b55f2b2bb19" data-name="text-8798f7"><div class="sl-block-content fragment" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 18;" data-gramm="false" data-fragment-index="3"><p>Time series model</p></div></div>
+</div></div>
+<div class="sl-block" data-block-type="line" style="width: auto; height: auto; min-width: 0px; min-height: 0px; left: 293px; top: 592.75px;" data-name="line-e4c5a3" data-block-id="a76ede7aed67e49c6a36f88e7df92b26"><div class="sl-block-content fragment" data-line-x1="0" data-line-y1="84" data-line-x2="395" data-line-y2="0" data-line-color="#cc0000" data-line-width="5px" data-line-start-type="none" data-line-end-type="none" data-line-style="solid-rounded" style="z-index: 19;" data-fragment-index="4"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveaspectratio="xMidYMid" width="395" height="84" viewbox="0 0 395 84"><path class="line-element" fill="rgba(0,0,0,0)" stroke="#cc0000" stroke-width="5" stroke-linecap="round" d="M0 84 L395 0"></path><path class="line-skeleton" fill="rgba(0,0,0,0)" stroke="rgba(0,0,0,0)" d="M0 84 L395 0"></path><path class="line-hitarea" fill="rgba(0,0,0,0)" stroke="rgba(0,0,0,0)" stroke-width="15" d="M0 84 L395 0"></path></svg></div></div>
+<div class="sl-block" data-block-type="text" style="height: auto; width: 290px; left: 670px; top: 641.5px;" data-name="text-663cb1" data-block-id="14721968b70733725c7378fe32fc6ca6"><div class="sl-block-content fragment" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 20; color: rgb(255, 0, 0);" data-lt-tmp-id="lt-263821" data-gramm="false" data-fragment-index="4"><p>Not needed for us!</p></div></div></section><section data-id="19cb3f6d281e214dfd06e899606a8d7b"><div class="sl-block" data-block-type="image" style="width: 806.4px; height: 384.145px; left: 76.8px; top: 87.9275px; min-width: 1px; min-height: 1px;" data-name="image-72aab3" data-block-id="2d10c35c1dffb24e678995d421c7ea98"><div class="sl-block-content" style="z-index: 10;"><img class="" data-natural-width="1587" data-natural-height="756" data-lazy-loaded="" data-src="anomaly-detection-for-heart-rate-data/54645ba89cf9aead4395ca989ebc19aa.png"></div></div>
+<div class="sl-block" data-block-type="text" style="width: 960px; left: 0px; top: 0px; height: auto;" data-block-id="63522a51b437e93cbdae12cfce72759a" data-name="text-c7f757"><div class="sl-block-content" data-placeholder-tag="h1" data-placeholder-text="Title Text" data-gramm="false" style="z-index: 11;"><h2>Anomaly detection with autoencoders</h2></div></div>
+<div class="sl-block" data-block-type="text" style="height: auto; width: 871px; left: 76.8px; top: 408px;" data-name="text-a05ba9" data-block-id="c562badb6ca18f75412b3d3f12e72b8b"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 12;"><ul>
+	<li class="fragment" data-fragment-index="0">Autoencoder: two networks
+	<ul>
+		<li>Encoder \(\phi_E\): maps into latent space</li>
+		<li>Decoder \(\phi_D\): maps back</li>
+		<li>AE trained to reconstruct normal data well, i.e., minimize \(d(z,\phi_D(\phi_E(z))\)</li>
+	</ul>
+	</li>
+	<li class="fragment" data-fragment-index="1">Thus: anomalous time series should reconstruct poorly</li>
+</ul></div></div></section><section data-id="02df1cb198a7f8b7f49ebe352d9c953e"><div class="sl-block" data-block-type="text" style="width: 960px; left: 0px; top: 0px; height: auto;" data-name="text-c7f757" data-block-id="8f79f164be19144226a8d9f4bb55cfc0"><div class="sl-block-content" data-placeholder-tag="h1" data-placeholder-text="Title Text" data-gramm="false" style="z-index: 11;"><h2>Autoencoders: a bit more</h2></div></div>
+<div class="sl-block" data-block-type="image" style="width: 777px; height: 518px; left: 91.5px; top: 42px; min-width: 1px; min-height: 1px;" data-name="image-8f75ee" data-block-id="7c748a6e75bc3ebba9e0aab65a67a91c"><div class="sl-block-content" style="z-index: 10;"><img class="" data-natural-width="1701" data-natural-height="1134" data-lazy-loaded="" data-src="anomaly-detection-for-heart-rate-data/7635e326d5d298688571e7958be46741.png"></div></div>
+<div class="sl-block" data-block-type="text" style="height: auto; width: 819px; left: 61px; top: 542px;" data-name="text-eda562" data-block-id="a93d2684b6726ee0fb179640c2dce7ad"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 12;"><ul>
+	<li>Just linear networks! Works well enough for our purposes.</li>
+	<li class="fragment" data-fragment-index="0">Trained by comparing decoder reconstruction to input.</li>
+	<li class="fragment" data-fragment-index="1">Seems to learn large-scale features of data...</li>
+</ul></div></div></section><section data-id="03ef2da993e86c5ef6b58afd90450b7a"><div class="sl-block" data-block-type="text" style="width: 960px; left: 0px; top: 0px; height: auto;" data-name="text-c7f757" data-block-id="bd95ced25a0bcbd74dbe9808fc667565"><div class="sl-block-content" data-placeholder-tag="h1" data-placeholder-text="Title Text" data-gramm="false" style="z-index: 10;"><h2>Electrocardiograms (ECGs)</h2></div></div>
+<div class="sl-block" data-block-type="image" style="width: 375px; height: 347.677px; left: 568.066px; top: 176.162px; min-width: 1px; min-height: 1px;" data-name="image-fb55fa" data-block-id="64e272c764e055e6901098f22aa41ed5"><div class="sl-block-content" style="z-index: 11;"><img class="" data-natural-width="2023" data-natural-height="1350" data-crop-x="0" data-crop-y="0" data-crop-width="0.71977" data-crop-height="1" style="left: 0px; top: 0px; width: 521px; height: 348px;" data-lazy-loaded="" data-src="anomaly-detection-for-heart-rate-data/d8354d91d16ecdb16580d6fcf6e40d52.png"></div></div>
+<div class="sl-block" data-block-type="text" style="height: auto; width: 540px; left: 20px; top: 210px;" data-name="text-685245" data-block-id="e14f4b586a58faebf2e0ad290d687c2e"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 12;"><ul>
+	<li>Recordings of the electrical activity of the heart</li>
+	<li class="fragment" data-fragment-index="0">Diagnose various heart conditions
+	<ul>
+		<li>Arrhythmia</li>
+		<li>Ischemia</li>
+		<li>Other abnormalities</li>
+	</ul>
+	</li>
+</ul></div></div></section><section data-id="8778d618dc63678b781dc72f9e565d8e"><div class="sl-block" data-block-type="text" style="width: 960px; left: 0px; top: 0px; height: auto;" data-name="text-c7f757" data-block-id="2f00118727fe677629b328227e2e81fc"><div class="sl-block-content" data-placeholder-tag="h1" data-placeholder-text="Title Text" data-gramm="false" style="z-index: 10;"><h2>Why autoencoders for ECGs?</h2></div></div>
+<div class="sl-block" data-block-type="text" style="height: auto; width: 960px; left: 0px; top: 537px;" data-name="text-685245" data-block-id="f76540ee56108d4f22a4049b56ac3a6e"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 11;" data-gramm="false">
+<ul>
+	<li class="fragment" data-fragment-index="0">Abundance of data</li>
+	<li class="fragment" data-fragment-index="1">Structured and repeated signal</li>
+</ul>
+
+<p> </p>
+</div></div>
+<div class="sl-block" data-block-type="image" style="width: 806.4px; height: 384.145px; left: 76.8px; top: 87.9275px; min-width: 1px; min-height: 1px;" data-name="image-72aab3" data-block-id="bb1f5a5e3e4abfc2b963c13764f29213"><div class="sl-block-content" style="z-index: 12;"><img class="" data-natural-width="1587" data-natural-height="756" data-lazy-loaded="" data-src="anomaly-detection-for-heart-rate-data/54645ba89cf9aead4395ca989ebc19aa.png"></div></div>
+<div class="sl-block" data-block-type="text" style="height: auto; width: 600px; left: 180px; top: 624px;" data-name="text-e48de7" data-block-id="28c39004856e1e2b19878838db9fcbf5"><div class="sl-block-content fragment" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 13;" data-fragment-index="2"><p>= Good for autoencoders</p></div></div></section><section data-id="44d740c020c11f37b3fd9ba212e219c7"><div class="sl-block" data-block-type="text" style="width: 960px; left: 0px; top: 0px; height: auto;" data-name="text-c7f757" data-block-id="47d43e97621e097fe397d7e0a8cdec16"><div class="sl-block-content" data-placeholder-tag="h1" data-placeholder-text="Title Text" data-gramm="false" style="z-index: 10;"><h2>The ECG5000 dataset</h2></div></div>
+<div class="sl-block" data-block-type="text" style="height: auto; width: 960px; left: 0px; top: 537px;" data-name="text-685245" data-block-id="9bbb633768fb85fcb95a262b4bb0c1d8"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 11;" data-gramm="false">
+<p>Long-term ECG recordings</p>
+
+<ul>
+	<li class="fragment" data-fragment-index="0">11 men aged 22 to 71</li>
+	<li class="fragment" data-fragment-index="1">4 women aged 54 to 64</li>
+</ul>
+</div></div>
+<div class="sl-block" data-block-type="image" style="width: 842.421px; height: 700px; left: 58.7895px; top: 169px; min-width: 1px; min-height: 1px;" data-name="image-566920" data-block-id="9034e77b22c22de921fbe1afbede8cb7"><div class="sl-block-content" style="z-index: 12;"><img class="" data-natural-width="1183" data-natural-height="983" data-lazy-loaded="" data-src="anomaly-detection-for-heart-rate-data/0e111192a5d96495114a600538f36721.png"></div></div></section><section data-id="43dfd28668ca7bb6fe804f7b9542be4a"><div class="sl-block" data-block-type="text" style="width: 960px; left: 0px; top: 0px; height: auto;" data-name="text-c7f757" data-block-id="4eab588be85c21d26f59c5686e386bb6"><div class="sl-block-content" data-placeholder-tag="h1" data-placeholder-text="Title Text" data-gramm="false" style="z-index: 11;"><h2>ECG5000 dataset -preprocessing</h2></div></div>
+<div class="sl-block" data-block-type="text" style="height: auto; width: 960px; left: 0px; top: 537px;" data-name="text-685245" data-block-id="4d793dce6e240264b44dedc6a4ccc5e7"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 12;" data-gramm="false"><ol>
+	<li class="fragment" data-fragment-index="0">Heartbeat extraction</li>
+	<li class="fragment" data-fragment-index="1">Length adjustment (140 timesteps)</li>
+	<li class="fragment" data-fragment-index="2">Random sampling (5000 heartbeats)</li>
+</ol></div></div>
+<div class="sl-block" data-block-type="image" style="width: 582.942px; height: 424px; left: 188.529px; top: 102px; min-width: 1px; min-height: 1px;" data-name="image-6371a2" data-block-id="251cfbc244dc9b04ba73c97f61836e04"><div class="sl-block-content" style="z-index: 10;"><img class="" data-natural-width="1247" data-natural-height="907" data-lazy-loaded="" data-src="anomaly-detection-for-heart-rate-data/0196ff34f52115b5bfdabe2abb1e536d.png"></div></div></section><section data-id="26a1a148c4c9c5b97d97b2fdbc9fdf31"><div class="sl-block" data-block-type="text" style="width: 960px; left: 0px; top: 0px; height: auto;" data-name="text-c7f757" data-block-id="3ba6f7a3543779042f1bde24a492d041"><div class="sl-block-content" data-placeholder-tag="h1" data-placeholder-text="Title Text" data-gramm="false" style="z-index: 11;"><h2>Final dataset</h2></div></div>
+<div class="sl-block" data-block-type="image" style="width: 732.802px; height: 533px; left: 113.599px; top: 83.5px; min-width: 1px; min-height: 1px;" data-name="image-6371a2" data-block-id="388188f5fb55471abe4e96d78f8882ac"><div class="sl-block-content" style="z-index: 10;"><img class="" data-natural-width="1247" data-natural-height="907" data-lazy-loaded="" data-src="anomaly-detection-for-heart-rate-data/0196ff34f52115b5bfdabe2abb1e536d.png"></div></div></section><section data-id="2b6724aa1cc34de2b2463418275b71b2"><div class="sl-block" data-block-type="text" style="width: 960px; left: 0px; top: 0px; height: auto;" data-name="text-c7f757" data-block-id="ebace47fb1ce359823502cddd7fc6328"><div class="sl-block-content" data-placeholder-tag="h1" data-placeholder-text="Title Text" data-gramm="false" style="z-index: 10;"><h2>How to actually detect?</h2></div></div>
+<div class="sl-block" data-block-type="image" style="width: 953.067px; height: 285.92px; left: 3.4665px; top: 116.04px; min-width: 1px; min-height: 1px;" data-name="image-980ecf" data-block-id="5536f1d3d6db7c4be2421dd7709fd94f"><div class="sl-block-content" style="z-index: 11;"><img class="" data-natural-width="1890" data-natural-height="567" data-lazy-loaded="" data-src="anomaly-detection-for-heart-rate-data/a44ed9cb7ddd03fcd380be19a8d1cdf8.png"></div></div>
+<div class="sl-block" data-block-type="text" style="height: auto; width: 600px; left: 180px; top: 443.96px;" data-name="text-1604fa" data-block-id="8dc8bc0d119402c6e82a029979205a15"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 12;"><ul>
+	<li>Feed normal time series into AE</li>
+	<li class="fragment" data-fragment-index="0">Build empirical distribution of reconstruction scores</li>
+	<li class="fragment" data-fragment-index="1">Choose cutoff in empirical cdf as rule for being anomaly or not</li>
+</ul></div></div></section><section data-id="4aeccf05b5878eb75517bf800f3ef80f"><div class="sl-block" data-block-type="text" style="width: 960px; left: 0px; top: 0px; height: auto;" data-name="text-c7f757" data-block-id="0f6b0805e814c9794aecc1a886468386"><div class="sl-block-content" data-placeholder-tag="h1" data-placeholder-text="Title Text" data-gramm="false" style="z-index: 10;"><h2>How to actually detect?</h2></div></div>
+
+<div class="sl-block" data-block-type="math" style="width: auto; height: auto; left: 223px; top: 98px;" data-name="math-a97b30" data-block-id="951f7499442117725363cde7b3ef3a94"><div class="sl-block-content notranslate" data-math-display="true" style="z-index: 11; font-size: 60%; border-style: solid; border-width: 5px; border-radius: 20px; border-color: rgb(61, 133, 198);"><div class="math-input">\{d(z,\phi_D(\phi_E(z))), \forall z \in D \}\\
+\text{ Reconstruction losses on training data }</div></div></div>
+<div class="sl-block" data-block-type="math" style="width: auto; height: auto; left: 80px; top: 506px;" data-block-id="a7b2996a458cc9104a335124ab889efe" data-name="math-73de66"><div class="sl-block-content notranslate fragment" data-math-display="true" style="z-index: 12; font-size: 60%; border-style: solid; border-width: 5px; border-radius: 20px; border-color: rgb(61, 133, 198);" data-fragment-index="2"><div class="math-input">1-\operatorname{CDF}_{\pi_D}(d(x)) = 1 -\mathbb{P}_{\pi_D}(d(z) \leq d(x)) = \mathbb{P}_{\pi_D}(d(z) &gt; d(x))\\
+\text{ Anomaly score }
+</div></div></div>
+<div class="sl-block" data-block-type="math" style="width: auto; height: auto; left: 279px; top: 234px;" data-block-id="13311a4d5439295b057e7b2090ae462c" data-name="math-84ab81"><div class="sl-block-content notranslate fragment" data-math-display="true" style="z-index: 13; font-size: 60%; border-style: solid; border-width: 5px; border-color: rgb(61, 133, 198); border-radius: 20px;" data-fragment-index="0"><div class="math-input">d(\cdot ) \coloneqq d(\cdot,\phi_D(\phi_E(\cdot)))\\
+\text{ Abbreviation for training loss }
+</div></div></div>
+<div class="sl-block" data-block-type="math" style="width: auto; height: auto; left: 146.5px; top: 370px;" data-block-id="b9aba0271edc0737ca52ffd1b8a7f74a" data-name="math-8f11fb"><div class="sl-block-content notranslate fragment" data-math-display="true" style="z-index: 14; font-size: 60%; border-style: solid; border-width: 5px; border-radius: 20px; border-color: rgb(61, 133, 198);" data-fragment-index="1"><div class="math-input">\pi_D\\ 
+\text{ Collection of reconstruction losses of training data }</div></div></div></section><section data-id="2668f59c74ea15babc3bdca3ea2784eb"><div class="sl-block" data-block-type="text" style="width: 960px; left: 0px; top: 0px; height: auto;" data-name="text-c7f757" data-block-id="6e514ef14728cafcd93c602796a2ef78"><div class="sl-block-content" data-placeholder-tag="h1" data-placeholder-text="Title Text" data-gramm="false" style="z-index: 10;"><h2>A dataset that does not work</h2></div></div>
+
+<div class="sl-block" data-block-type="image" style="width: 960px; height: 407.565px; left: -1.42109e-14px; top: 146.218px; min-width: 1px; min-height: 1px;" data-name="image-ed231a" data-block-id="25e7137458faa79a7f023e9dc290d16b"><div class="sl-block-content" style="z-index: 11;"><img class="" data-natural-width="1988" data-natural-height="844" data-lazy-loaded="" data-src="anomaly-detection-for-heart-rate-data/a34011bf4875b5eb4a1aa5d1ba522020.png"></div></div></section><section data-id="a1d64293728430125461f91d7ad0006a"><div class="sl-block" data-block-type="text" style="width: 960px; left: 0px; top: 0px; height: auto;" data-name="text-c7f757" data-block-id="8841830f07ea887b948fbc1a71e20434"><div class="sl-block-content" data-placeholder-tag="h1" data-placeholder-text="Title Text" data-gramm="false" style="z-index: 10;"><h2>Scalability through an ensemble</h2></div></div>
+<div class="sl-block" data-block-type="text" style="height: auto; width: 960px; left: 0px; top: 238px;" data-name="text-478fa4" data-block-id="d785ce6439c0ff7a456be420093c505d"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 11;"><ul>
+	<li>Primary objective: Utilize an ensemble when the dataset exceeds the capacity of a single machine</li>
+	<li class="fragment" data-fragment-index="0">Enables the application of a distributed learning framework:
+	<ul>
+		<li>Potential acceleration of training</li>
+		<li>Potentially respecting privacy data</li>
+	</ul>
+	</li>
+	<li class="fragment" data-fragment-index="1">Low transfer costs by outputting metrics (anomaly score)</li>
+</ul></div></div></section><section data-id="9c7f69842f7adc7a08b6aef6a16892c6"><div class="sl-block" data-block-type="text" style="width: 960px; left: 0px; top: 0px; height: auto;" data-name="text-c7f757" data-block-id="99d5c136b3cff89f8dfa1bcfd22b400f"><div class="sl-block-content" data-placeholder-tag="h1" data-placeholder-text="Title Text" data-gramm="false" style="z-index: 10;"><h2>Ensemble outline</h2></div></div>
+<div class="sl-block" data-block-type="text" style="height: auto; width: 960px; left: 0px; top: 133px;" data-name="text-478fa4" data-block-id="d83c1ad23edc53b80f562ede994640ac"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 11;" data-gramm="false"><ul>
+	<li>Data set \(D\), size \(S_D\)</li>
+	<li class="fragment" data-fragment-index="0">Each node (machine) can handle at most \(S_1\) datapoints within a reasonable timeframe</li>
+	<li class="fragment" data-fragment-index="1">Use ensemble if \(S_D &gt; S_1\), otherwise use a single machine</li>
+	<li class="fragment" data-fragment-index="2">Partition data into \(N\) chunks: \(D = \cup_{i=1}^N D_i\), where \(|D_i| &lt; S_1\)</li>
+	<li class="fragment" data-fragment-index="3">Use \(N\) nodes</li>
+	<li class="fragment" data-fragment-index="4">Fault tolerence: The system continues to function (for inference) effectively even if one or more nodes fail.</li>
+	<li class="fragment" data-fragment-index="5">Dynamic scaling: As datasets grow, additional nodes can be incorporated to maintain performance</li>
+</ul></div></div></section><section data-id="6ab9de75ce2239deecfdae00e802d6c1"><div class="sl-block" data-block-type="text" style="width: 960px; left: 0px; top: 0px; height: auto;" data-name="text-c7f757" data-block-id="005a9fcb19d9bea0101cc65f32f900c3"><div class="sl-block-content" data-placeholder-tag="h1" data-placeholder-text="Title Text" data-gramm="false" style="z-index: 10;"><h2>Ensemble procedure</h2></div></div>
+<div class="sl-block" data-block-type="text" style="height: auto; width: 960px; left: 0px; top: 74px;" data-name="text-478fa4" data-block-id="05fe1b381c5949d2a8338ed6f041f1a1"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 11;" data-gramm="false">
+<p style="text-align:left">The process proceeds by letting:</p>
+
+<ol>
+	<li style="text-align:left" class="fragment" data-fragment-index="0">Training:
+	<ol>
+		<li style="text-align:left" class="fragment" data-fragment-index="1">Node \(i\) receives data \(D_i\), \(i = 1,\ldots N \)</li>
+		<li style="text-align:left" class="fragment" data-fragment-index="2">Node \(i\) defines a model \(m_i\), \(i = 1,\ldots N \)</li>
+		<li style="text-align:left" class="fragment" data-fragment-index="3">Model \(m_i\) trained on \(D_i\) until criteria is met, \(i = 1,\ldots N \)</li>
+	</ol>
+	</li>
+	<li style="text-align:left" class="fragment" data-fragment-index="4"> Inference:
+	<ol>
+		<li style="text-align:left" class="fragment" data-fragment-index="5">The master node is fed a set \(D_{\operatorname{test}}\) to perform the task</li>
+		<li style="text-align:left" class="fragment" data-fragment-index="6">Assuming \(|D_{\operatorname{test}}|&lt;S_1\), send whole set to each node \(i\)</li>
+		<li style="text-align:left" class="fragment" data-fragment-index="7">Node \(i\) evaluates and returns \(1-\operatorname{CDF}_{\pi_D}(d_i(D_{\operatorname{test}}))\)</li>
+		<li style="text-align:left" class="fragment" data-fragment-index="8">Master node computes the mean:</li>
+	</ol>
+	</li>
+</ol>
+
+<p style="text-align:left"> </p>
+
+<p style="text-align:left"> </p>
+</div></div>
+<div class="sl-block" data-block-type="math" style="width: auto; height: auto; left: 238.5px; top: 560px;" data-name="math-673cdb" data-block-id="460eeb3ea786f6a08cf8ae6f1b300413"><div class="sl-block-content notranslate fragment" data-math-display="true" style="z-index: 12; font-size: 75%;" data-fragment-index="9"><div class="math-input">\frac{1}{N}\sum_{i=1}^N \left(1-\operatorname{CDF}_{\pi_D}(d_i(D_{\operatorname{test}}))\right)</div></div></div></section><section data-id="b3c792c6ed2c2b308452262f926b0868"><div class="sl-block" data-block-type="text" style="width: 960px; left: 0px; top: 0px; height: auto;" data-name="text-c7f757" data-block-id="3dfd475154dbb91b2800454eac0c8082"><div class="sl-block-content" data-placeholder-tag="h1" data-placeholder-text="Title Text" data-gramm="false" style="z-index: 10;"><h2>Ensamble pipeline on data</h2></div></div>
+<div class="sl-block" data-block-type="image" style="width: 741.333px; height: 556px; left: 109.334px; top: 112px; min-width: 1px; min-height: 1px;" data-name="image-d69c0b" data-block-id="45e744fa046c61cd55de53c51f587f8b"><div class="sl-block-content" style="z-index: 11;"><img class="" data-natural-width="1496" data-natural-height="1122" data-lazy-loaded="" data-src="anomaly-detection-for-heart-rate-data/11fda3d332290b84461dea81c0268b4d.png"></div></div></section><section data-id="14138ce7bd2ba8eecd6185809bc364ea"><div class="sl-block" data-block-type="text" style="width: 960px; left: 0px; top: 0px; height: auto;" data-name="text-c7f757" data-block-id="a4460ee082360d91f5e91c1046a5ae98"><div class="sl-block-content" data-placeholder-tag="h1" data-placeholder-text="Title Text" data-gramm="false" style="z-index: 10;"><h2>Real-world scenario</h2></div></div>
+<div class="sl-block" data-block-type="image" style="width: 324px; height: 180px; left: 43px; top: 284px; min-width: 1px; min-height: 1px;" data-name="image-7e34b6" data-block-id="1e606b659d57eb977166ea41c88ee9e5"><div class="sl-block-content" style="z-index: 11; border-style: solid; border-width: 5px;"><img class="" data-natural-width="900" data-natural-height="500" data-lazy-loaded="" data-src="anomaly-detection-for-heart-rate-data/e318aee38b94d801a8af4cd31a6ac750.png"></div></div>
+<div class="sl-block" data-block-type="line" style="width: auto; height: auto; min-width: 0px; min-height: 0px; left: 367px; top: 160.75px;" data-name="line-d2d010" data-block-id="7a36035596d541a70752a68e9c78cd16"><div class="sl-block-content" data-line-x1="0" data-line-y1="202" data-line-x2="156" data-line-y2="0" data-line-color="#cc0000" data-line-width="5px" data-line-start-type="none" data-line-end-type="none" data-line-style="solid-rounded" style="z-index: 21;"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveaspectratio="xMidYMid" width="156" height="202" viewbox="0 0 156 202"><path class="line-element" fill="rgba(0,0,0,0)" stroke="#cc0000" stroke-width="5" stroke-linecap="round" d="M0 202 L156 0"></path><path class="line-skeleton" fill="rgba(0,0,0,0)" stroke="rgba(0,0,0,0)" d="M0 202 L156 0"></path><path class="line-hitarea" fill="rgba(0,0,0,0)" stroke="rgba(0,0,0,0)" stroke-width="15" d="M0 202 L156 0"></path></svg></div></div>
+<div class="sl-block" data-block-type="line" style="width: auto; height: auto; min-width: 0px; min-height: 0px; left: 368px; top: 361.75px;" data-block-id="05250c5d072409ba2d6f167517f491f1" data-name="line-8a237b"><div class="sl-block-content" data-line-x1="0" data-line-y1="0" data-line-x2="155" data-line-y2="0" data-line-color="#cc0000" data-line-width="5px" data-line-start-type="none" data-line-end-type="none" data-line-style="solid-rounded" style="z-index: 22;"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveaspectratio="xMidYMid" width="155" height="1" viewbox="0 0 155 1"><path class="line-element" fill="rgba(0,0,0,0)" stroke="#cc0000" stroke-width="5" stroke-linecap="round" d="M0 0 L155 0"></path><path class="line-skeleton" fill="rgba(0,0,0,0)" stroke="rgba(0,0,0,0)" d="M0 0 L155 0"></path><path class="line-hitarea" fill="rgba(0,0,0,0)" stroke="rgba(0,0,0,0)" stroke-width="15" d="M0 0 L155 0"></path></svg></div></div>
+<div class="sl-block" data-block-type="line" style="width: auto; height: auto; min-width: 0px; min-height: 0px; left: 367px; top: 362.75px;" data-block-id="40ab7c104b4675fabe203a25b957b554" data-name="line-3f5d22"><div class="sl-block-content" data-line-x1="0" data-line-y1="0" data-line-x2="156" data-line-y2="236.25" data-line-color="#cc0000" data-line-width="5px" data-line-start-type="none" data-line-end-type="none" data-line-style="solid-rounded" style="z-index: 23;"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveaspectratio="xMidYMid" width="156" height="236.25" viewbox="0 0 156 236.25"><path class="line-element" fill="rgba(0,0,0,0)" stroke="#cc0000" stroke-width="5" stroke-linecap="round" d="M0 0 L156 236.25"></path><path class="line-skeleton" fill="rgba(0,0,0,0)" stroke="rgba(0,0,0,0)" d="M0 0 L156 236.25"></path><path class="line-hitarea" fill="rgba(0,0,0,0)" stroke="rgba(0,0,0,0)" stroke-width="15" d="M0 0 L156 236.25"></path></svg></div></div>
+<div class="sl-block" data-block-type="math" style="width: auto; height: auto; left: 593.5px; top: 449px;" data-name="math-c89290" data-block-id="bf5e4b9a44f5dab0361f244572afeaa9"><div class="sl-block-content notranslate" data-math-display="true" style="z-index: 24; color: rgb(204, 0, 0);"><div class="math-input">\ldots</div></div></div>
+<div class="sl-block" data-block-type="image" style="width: 118px; height: 118px; left: 767px; top: 99px; min-width: 1px; min-height: 1px;" data-name="image-09936b" data-block-id="75310bf1e5b41c3ad324f7eb37a6ed10"><div class="sl-block-content" style="z-index: 13;"><img class="" data-natural-width="512" data-natural-height="512" data-lazy-loaded="" data-src="anomaly-detection-for-heart-rate-data/193ed032aa5bcabff4730a5c023c78ec.png"></div></div>
+<div class="sl-block" data-block-type="image" style="width: 150px; height: 150px; left: 548px; top: 74px; min-width: 1px; min-height: 1px;" data-name="image-773331" data-block-id="5257db6e58f1e0ea2175e0ae49aa7e68"><div class="sl-block-content" style="z-index: 14;"><img class="" data-natural-width="512" data-natural-height="512" data-lazy-loaded="" data-src="anomaly-detection-for-heart-rate-data/4a1b165cfe70e832d2f3ccf028dcc062.png"></div></div>
+<div class="sl-block" data-block-type="image" style="width: 118px; height: 118px; left: 767px; top: 324px; min-width: 1px; min-height: 1px;" data-block-id="70409b60972b3097523a21fc5d8c58ec" data-name="image-f2e84e"><div class="sl-block-content" style="z-index: 16;"><img class="" data-natural-width="512" data-natural-height="512" data-lazy-loaded="" data-src="anomaly-detection-for-heart-rate-data/193ed032aa5bcabff4730a5c023c78ec.png"></div></div>
+<div class="sl-block" data-block-type="image" style="width: 150px; height: 150px; left: 548px; top: 299px; min-width: 1px; min-height: 1px;" data-block-id="59d23c356ba83a4ea7d74cf60a2cbbff" data-name="image-6d9698"><div class="sl-block-content" style="z-index: 17;"><img class="" data-natural-width="512" data-natural-height="512" data-lazy-loaded="" data-src="anomaly-detection-for-heart-rate-data/4a1b165cfe70e832d2f3ccf028dcc062.png"></div></div>
+<div class="sl-block" data-block-type="image" style="width: 118px; height: 118px; left: 767px; top: 549px; min-width: 1px; min-height: 1px;" data-block-id="ba6dcd1a91c0bf2fc6ece4ab8bccc004" data-name="image-6056e7"><div class="sl-block-content" style="z-index: 19;"><img class="" data-natural-width="512" data-natural-height="512" data-lazy-loaded="" data-src="anomaly-detection-for-heart-rate-data/193ed032aa5bcabff4730a5c023c78ec.png"></div></div>
+<div class="sl-block" data-block-type="image" style="width: 150px; height: 150px; left: 548px; top: 524px; min-width: 1px; min-height: 1px;" data-block-id="795614740c1b03ca75849e48052716d6" data-name="image-ccd810"><div class="sl-block-content" style="z-index: 20;"><img class="" data-natural-width="512" data-natural-height="512" data-lazy-loaded="" data-src="anomaly-detection-for-heart-rate-data/4a1b165cfe70e832d2f3ccf028dcc062.png"></div></div></section><section data-id="8ba65c045a231b51ff1d409e60fe6b90"><div class="sl-block" data-block-type="text" style="width: 960px; left: 0px; top: 0px; height: auto;" data-name="text-c7f757" data-block-id="f967985cece5428cef8f226658cfcebf"><div class="sl-block-content" data-placeholder-tag="h1" data-placeholder-text="Title Text" data-gramm="false" style="z-index: 10;"><h2>Scalability of TorchDistributor Enabled by Distributed Data Parallel (DDP)</h2></div></div>
+<div class="sl-block" data-block-type="image" style="width: 806.4px; height: 453.6px; left: 80px; top: 222px; min-width: 1px; min-height: 1px;" data-name="image-6800f0" data-block-id="c59923f5e98f792d4c8a0b4b45d66aec"><div class="sl-block-content" style="z-index: 11;"><img class="" data-natural-width="960" data-natural-height="540" data-lazy-loaded="" data-src="anomaly-detection-for-heart-rate-data/545f21428060f20e1da54f9eaaab8abb.png"></div></div></section><section data-id="f2b6e75f5839dda7dda228895c7c33e6">
+<div class="sl-block" data-block-type="text" style="width: 960px; left: 0px; top: 0px; height: auto;" data-name="text-c7f757" data-block-id="5c5b64e08df83605439bd9da05004a29"><div class="sl-block-content" data-placeholder-tag="h1" data-placeholder-text="Title Text" data-gramm="false" style="z-index: 10;"><h2>Main Function to Initiate Pipeline</h2></div></div>
+<div class="sl-block" data-block-type="code" style="width: 822px; height: 203px; left: 69px; top: 248.5px;" data-name="code-ba2cc8" data-block-id="07eb1c402f2e3837973128d535a73c90"><div class="sl-block-content notranslate" data-highlight-theme="zenburn" data-code-frame="none" style="z-index: 11;"><pre style="font-size: 16px; line-height: 19px; tab-size: 4;" class="python"><code data-line-numbers="">from pyspark.ml.torch.distributor import TorchDistributor
+
+result = TorchDistributor(
+    num_processes= N,     # Number of "nodes" we use (actual tasks)
+    local_mode=True,      # Determines if the master node is doing work or not
+    use_gpu=False         # Use GPU or not
+        ).run(
+            &lt;function&gt;,   # The function call we want to distribute to each node
+            &lt;args&gt;     )  # The arguments that should be passed to each node</code></pre></div></div></section><section data-id="c00ebc58255dc05f74bfc3f7d464c979"><div class="sl-block" data-block-type="text" style="width: 960px; left: 0px; top: 0px; height: auto;" data-name="text-c7f757" data-block-id="7fbf9a79b8628722787d27fa5d296072"><div class="sl-block-content" data-placeholder-tag="h1" data-placeholder-text="Title Text" data-gramm="false" style="z-index: 10;"><h2>Collaboration environment</h2></div></div>
+<div class="sl-block" data-block-type="image" style="width: 806.4px; height: 453.6px; left: 76.8px; top: 123.2px; min-width: 1px; min-height: 1px;" data-name="image-25774e" data-block-id="c9d359094bc35e0cb71af4a2b63cac87"><div class="sl-block-content" style="z-index: 11;"><img class="" data-natural-width="960" data-natural-height="540" data-lazy-loaded="" data-src="anomaly-detection-for-heart-rate-data/3a2f2bd46d484ece2c1e6eef9e7e9b4c.png"></div></div></section><section data-id="383f0e37d1e0fea8462b0e397c0abbbe"><div class="sl-block" data-block-type="text" style="width: 960px; left: 0px; top: 0px; height: auto;" data-name="text-c7f757" data-block-id="904f6cf3ba0c530fe9ccc77290473540"><div class="sl-block-content" data-placeholder-tag="h1" data-placeholder-text="Title Text" data-gramm="false" style="z-index: 10;"><h2>Results for each model</h2></div></div>
+<div class="sl-block" data-block-type="image" style="width: 960px; height: 380.645px; left: -1.42109e-14px; top: 140px;" data-name="image-9b74e7" data-block-id="cf9f99ab5c6d84c6302c42b52916b95a"><div class="sl-block-content" style="z-index: 11;"><img class="" data-natural-width="1488" data-natural-height="590" data-src="anomaly-detection-for-heart-rate-data/0448f1d2eb1f9811938893f09a205701.png"></div></div>
+<div class="sl-block" data-block-type="text" style="width: 960px; left: -1.42109e-14px; top: 560px; height: auto;" data-block-id="4e8b8e26c864f02c20d2a47e83bfc8a5" data-name="text-f3fffa"><div class="sl-block-content" data-placeholder-tag="h1" data-placeholder-text="Title Text" data-gramm="false" style="z-index: 12;"><h3>Anomaly score</h3></div></div></section><section data-id="8046d8b2a479c9287502f7b35171cced"><div class="sl-block" data-block-type="text" style="width: 960px; left: 0px; top: 0px; height: auto;" data-name="text-c7f757" data-block-id="123af5317ddc44c42798fa73eb6ca04b"><div class="sl-block-content" data-placeholder-tag="h1" data-placeholder-text="Title Text" data-gramm="false" style="z-index: 10;"><h2>Results for each model</h2></div></div>
+<div class="sl-block" data-block-type="image" style="width: 960px; height: 336.742px; left: -1.42109e-14px; top: 181.629px;" data-name="image-0a2fbc" data-block-id="b6112e4759e1a63af95bbb6c4d191c3e"><div class="sl-block-content" style="z-index: 11;"><img class="" data-natural-width="1682" data-natural-height="590" data-src="anomaly-detection-for-heart-rate-data/4d68929ec5e7a855a57fe0e71096e3e1.png"></div></div>
+<div class="sl-block" data-block-type="text" style="width: 960px; left: -1.42109e-14px; top: 560px; height: auto;" data-name="text-f3fffa" data-block-id="4692c5ec2d1471e6975fb45ee02e1f12"><div class="sl-block-content" data-placeholder-tag="h1" data-placeholder-text="Title Text" data-gramm="false" style="z-index: 12;"><h3>Performance metric</h3></div></div></section><section data-id="eac19e62bc5ee72e1a464fde6ad0d0cd"><div class="sl-block" data-block-type="text" style="width: 960px; left: 0px; top: 0px; height: auto;" data-name="text-c7f757" data-block-id="fe04572eeffb058dd4535f0dbaaad596"><div class="sl-block-content" data-placeholder-tag="h1" data-placeholder-text="Title Text" data-gramm="false" style="z-index: 10;"><h2>Results for the ensemble</h2></div></div>
+<div class="sl-block" data-block-type="image" style="width: 355.105px; height: 286px; left: 62.4475px; top: 184px;" data-name="image-674da6" data-block-id="0310871b6eba75e3f9ad33f47195fae3"><div class="sl-block-content" style="z-index: 11;"><img class="" data-natural-width="519" data-natural-height="418" data-src="anomaly-detection-for-heart-rate-data/8f17407e8c220b9ad3416d09ee29687c.png"></div></div>
+<div class="sl-block" data-block-type="image" style="width: 382.271px; height: 304px; left: 528.865px; top: 175px;" data-name="image-d8cccc" data-block-id="60e58313d3e646e179e4c19e82baa1a9"><div class="sl-block-content" style="z-index: 12;"><img class="" data-natural-width="547" data-natural-height="435" data-src="anomaly-detection-for-heart-rate-data/b100162368999f58f491db4f94197716.png"></div></div></section>
+			</div>
+		</div>
+
+		<script>
+			var SLConfig = {"deck": {"id":3323646,"slug":"anomaly-detection-for-heart-rate-data","title":"Anomaly detection for heart rate data","description":"","width":960,"height":700,"margin":0.05,"visibility":"self","published_at":null,"sanitize_messages":null,"thumbnail_url":"https://s3.amazonaws.com/media-p.slid.es/thumbnails/eab110e1bc59e7b915ce9b1f9987a5ce/thumb.jpg?1734448118","view_count":0,"user":{"id":1438840,"username":"erikjansson","name":"Erik Jansson","description":"","thumbnail_url":"https://lh6.googleusercontent.com/-Fhx-aF5R8YM/AAAAAAAAAAI/AAAAAAAAAAA/AMZuuclsqfmsbC_N33mpioo9rtm50lZoeg/photo.jpg","account_type":"lite","team_id":null,"settings":{"id":6404341,"present_controls":true,"present_upsizing":true,"present_pointer":false,"present_notes":true,"default_deck_tag_id":null}},"background_transition":"slide","transition":"none","theme_id":null,"theme_font":"montserrat","theme_color":"white-blue","auto_slide_interval":0,"comments_enabled":true,"forking_enabled":false,"rolling_links":false,"center":false,"shuffle":null,"should_loop":false,"share_notes":null,"slide_number":null,"slide_count":23,"rtl":false,"version":2,"collaborative":null,"deck_user_editor_limit":1,"data_updated_at":1734471024113,"font_typekit":null,"font_google":null,"time_limit":null,"navigation_mode":"default","upsizing_enabled":null,"language":"en","notes":{}}};
+
+
+			// Use local fonts
+			SLConfig.fonts_url = 'lib/fonts/';
+		</script>
+
+		<script src="lib/reveal.js"></script>
+		<script src="lib/reveal-plugins.js"></script>
+		<script src="lib/offline.js"></script>
+
+		<!-- Initialize the presentation -->
+		<script>
+			Reveal.initialize({
+				width: 960,
+				height: 700,
+				margin: 0.05,
+				
+
+				hash: true,
+				controls: true,
+				progress: true,
+				mouseWheel: false,
+				showNotes: false,
+				slideNumber: false,
+				fragmentInURL: true,
+
+				autoSlide: 0,
+				autoSlideStoppable: true,
+
+				autoAnimateMatcher: SL.deck.AutoAnimate.matcher,
+
+				scrollActivationWidth: null,
+
+				center: false,
+				shuffle: false,
+				loop: false,
+				rtl: false,
+				navigationMode: "default",
+
+				transition: "none",
+				backgroundTransition: "slide",
+
+				highlight: {
+					escapeHTML: false
+				},
+
+				plugins: [ RevealZoom, RevealNotes, RevealMarkdown, RevealHighlight ]
+			});
+		</script>
+
+		
+
+
+	</body>
+</html>
