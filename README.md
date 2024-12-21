@@ -7,6 +7,6 @@
     - Kasper Bågmark: Responsibility for the ensemble idea and creating the scalable setup with TorchDistributor. Investigated different options for scalability. Finalized the code and the repository.
     - Michele Di Sabato: Provided the idea of analysis and contributed to the implementation of the scalable training and inference pipelines. Authored parts of the report and most of the results.
     - Erik Jansson: Did a thorough literature review of relevant methods for using autoencoders on timeseries. Provided the finalized project idea, created the figures in the report and integrated the content to coherent slides.
-    - Peng Kuang: Investigated scalability, especially for federated learning in general. Provided the docker image and made sure that the collaboration worked smoothly through the repository.
+    - Peng Kuang: Organized most of the meetings and suggested the branching of scalability to divide the tasks among team members. Co-investigated scalability, especially for federated learning in general. Provided the docker image and made sure that the collaboration worked smoothly through the repository.
     - Selma Tabakovic: Most of the initial investigation of using autoencoders on different datasets and different techniques for analysis. Main responsibility of the data, finalized the code and the repository.
     - Everyone: Contributed to the report and experimented with setup, autoencoders and timeseries analysis in different ways before the final project was finalized. 
