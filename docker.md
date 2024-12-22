@@ -26,7 +26,7 @@ First, pull down this docker image [1]: <https://hub.docker.com/r/jupyter/pyspar
 
 `docker pull jupyter/pyspark-notebook`
 
-[1]: <span style="font-family: 'Times New Roman', Times, serif;">_You only need to pull down this docker image once, the first time you tyr to run it. From the second time, you just run it directly with the command below._</span>
+[1]: <span style="font-family: 'Times New Roman', Times, serif;">_You only need to pull down this docker image once, the first time you try to run it. From the second time, you just run it directly with the command below._</span>
 
 Then run it locally: 
 
