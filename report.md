@@ -100,7 +100,7 @@ If $x$ is a normal signal and it has a shape coherent with the ones of the norma
 
 Notice that this anomaly detection pipeline returns a number in the $[0,1]$ interval ( namely, $1-\text{CDF}\_{\pi\_{\mathcal D}}(d(x))$ ), which could be regarded as the "probability" that the new signal is anomalous. Ideally, this would be the final output of the pipeline, letting experts in the field actually have the last word on whether the given time series is atypical or not. If the data have been collected in the medical field, this option might be safer than relying on the chosen threshold $\alpha$. We choose to select a threshold and to actually flag time series as normal or anomalous for the purpose of evaluating the performance of the pipeline. Finally, since the CDF of $\pi_{\mathcal D}$ is of course unknown in practice, we estimate it using the Empirial Cumulative Distribution Function.
 
-Remark: An alternative to this approach might be to compare the new time series $x$ and the normal signals in the dataset $\mathcal D$ through the embdedd features learned by the autoencoder. We did not opt for this approach as the latent space might look different for each model when we consider the ensemble which we explain in the next section.
+Remark: An alternative to this approach might be to compare the new time series $x$ and the normal signals in the dataset $\mathcal D$ through the embedded features learned by the autoencoder. We did not opt for this approach as the latent space might look different for each model when we consider the ensemble which we explain in the next section.
 
 ## Scalability
 
@@ -117,13 +117,13 @@ The process proceeds by letting
 2. Inference
     1. The master node is fed a set (possibly single element) $D\_{test}$ to perform TASK (Anomaly detection)
     2. Assuming $|D\_{test}| < S\_1 $, we send the whole set to each node $i$, $i=1,\dots,N$, otherwise we do a partition and send one partion at a time
-    3. Node $i$ evalutes and returns $f\_{AD}(m\_i(D\_{test}))$ to master node, $i=1,\dots,N$, ($AD$ = Anomaly detection)
+    3. Node $i$ evaluates and returns $f\_{AD}(m\_i(D\_{test}))$ to master node, $i=1,\dots,N$, ($AD$ = Anomaly detection)
     4. Master node evaluates the mean (or anything else)
        $$\text{Output} = \frac{1}{N}\sum\_{i=1}^{N} f\_{AD}(m\_i(D\_{test}))$$
 
 (Note that the output can either be a single value representing an inference for the entire dataset or be evaluated pointwise, providing individual inference values for each data point.)
 
-The following figure summerizes how scalability is implemented:
+The following figure summarizes how scalability is implemented:
 <p align="center">
   <img src="./report_images/GA2.png" width="700" />
 </p>
@@ -135,7 +135,7 @@ The following figure summerizes how scalability is implemented:
     * Fault Tolerance: The system continues to function (for inference) effectively even if one or more nodes fail.
     * Dynamic Scaling: As datasets grow, additional nodes can be incorporated to maintain performance.
 
-In our application with ECG data, we assume the data is managed by a centralized healthcare system, for instance, www.1177.se. The dataset contains the nation's patient records of ten years. It is too big for a single node or cluster at 1177 to train. Although vertical scaling at 1177 is possible, it can still take too long to complete the training or simply cost too much to upgrade the infrastructure. Therefore, the better option is that 1177 acts as a driver to distribute the training job to the hospitals that already have some available, existing infrastructure. Further, 1177 can easily prescribe and actualize that each hospital trains the model with its own ECG data. That is, the hospital can only access the ECG data originally submitted to 1177 by itself. This approach preserves patients' privacy. Meanwhile, hospitals benefit from sharing a model that is well-trained with all the data.
+In our application with ECG data, we assume the data is managed by a centralized healthcare system, for instance, [www.1177.se](https://www.1177.se/). The dataset contains the nation's patient records of ten years. It is too big for a single node or cluster at 1177 to train. Although vertical scaling at 1177 is possible, it can still take too long to complete the training or simply cost too much to upgrade the infrastructure. Therefore, the better option is that 1177 acts as a driver to distribute the training job to the hospitals that already have some available, existing infrastructure. Further, 1177 can easily prescribe and actualize that each hospital trains the model with its own ECG data. That is, the hospital can only access the ECG data originally submitted to 1177 by itself. This approach preserves patients' privacy. Meanwhile, hospitals benefit from sharing a model that is well-trained with all the data.
 
 In this report, we focus on time series data from a single ECG dataset. To develop a plausible model, we implement an ensemble approach on a local machine. Instead of assigning a GPU node to each model and its corresponding data partition, we utilize a single machine by distributing the workload across CPU cores. For this purpose, we use the PySpark TorchDistributor framework, which efficiently distributes tasks across multiple cores. While designed to support GPUs and multi-GPU setups at each node, this framework is also adaptable for parallel processing on CPU cores.
 
@@ -176,9 +176,9 @@ In our main training function (where each node is working) we make use `local_ra
 
 ### Collaboration Environment
 
-The technical stack we ustilize to set up our collaboration environment consists of **Docker** and **Github**.
+The technical stack we utilize to set up our collaboration environment consists of **Docker** and **Github**.
 
-We chose Docker since we have hetogenious devices (4 Macs and 1 Windows) which suits containerization and it is widely used in the industry. We take it as a learning opportunity to increase our knowledge and extend our skillset. It further prevents dependency inconsistency and code conflits.
+We chose Docker since we have heterogeneous devices (4 Macs and 1 Windows) which suits containerization and it is widely used in the industry. We take it as a learning opportunity to increase our knowledge and extend our skill set. It further prevents dependency inconsistency and code conflicts.
 
 The development environment is built on top of an official PySpark docker image. Each team member can pull it down to their machine and run it locally for coding. 
 
