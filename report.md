@@ -180,7 +180,7 @@ The technical stack we utilize to set up our collaboration environment consists 
 
 We chose Docker because it suits our heterogeneous devices (4 Macs and 1 Windows) and is widely used in the industry. We take it as a learning opportunity to enhance our knowledge and expand our skill set. Additionally, it helps prevent dependency inconsistencies and code conflicts.
 
-The development environment is based on the official PySpark Docker image, which team members can easily pull and run locally for coding. For detailed setup instructions, refer to [docker.md][https://github.com/PengKuang/team_scalable_timeseries/blob/main/docker.md].
+The development environment is based on the official PySpark Docker image, which team members can easily pull and run locally for coding. For detailed setup instructions, refer to [docker.md](https://github.com/PengKuang/team_scalable_timeseries/blob/main/docker.md).
 
 This approach ensures a consistent development environment across the team. Once coding is complete, team members push their changes to the Git repository.
 
@@ -196,4 +196,4 @@ We chose PySpark as the framework to develop the scalable and distributed machin
 
 For model development, we selected PyTorch since we had two Macs with Apple M1 chip. Both experienced dependency compatibility issues with TensorFlow. 
 
-To implement distributed machine learning, we investigated both TorchDistributor and [Flower][https://flower.ai/], a federated learning framework. We chose TorchDistributor for its native integration with PySpark and its simplicity and brevity.
+To implement distributed machine learning, we investigated both TorchDistributor and [Flower](https://flower.ai/), a federated learning framework. We chose TorchDistributor for its native integration with PySpark and its simplicity and brevity.
