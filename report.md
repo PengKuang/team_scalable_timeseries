@@ -172,17 +172,17 @@ Running the ensemble on our own computer (laptop without GPUs `use_gpu = False`)
 
 In our main training function (where each node is working) we make use `local_rank = int(os.environ["LOCAL_RANK"])`. This retrieves which node that is working and in a very simple way we can collect the correct partition and model. Similarly, the model parameters are saved based on their `local_rank` to know which node it belongs to. Similarly, we define an inference function that is distributed with TorchDistributor.
 
-## Final notes:
+## Final notes
 
 ### Collaboration Environment
 
 The technical stack we utilize to set up our collaboration environment consists of **Docker** and **Github**.
 
-We chose Docker since we have heterogeneous devices (4 Macs and 1 Windows) which suits containerization and it is widely used in the industry. We take it as a learning opportunity to increase our knowledge and extend our skill set. It further prevents dependency inconsistency and code conflicts.
+We chose Docker because it suits our heterogeneous devices (4 Macs and 1 Windows) and is widely used in the industry. We take it as a learning opportunity to enhance our knowledge and expand our skill set. Additionally, it helps prevent dependency inconsistencies and code conflicts.
 
-The development environment is built on top of an official PySpark docker image. Each team member can pull it down to their machine and run it locally for coding. 
+The development environment is based on the official PySpark Docker image, which team members can easily pull and run locally for coding. For detailed setup instructions, refer to [docker.md][https://github.com/PengKuang/team_scalable_timeseries/blob/main/docker.md].
 
-This ensures the team has an uniform development environment. Afterwards, the team members push their code to the git repository.
+This approach ensures a consistent development environment across the team. Once coding is complete, team members push their changes to the Git repository.
 
 <p align="center">
   <img src="report_images/timeseries-dev-env.png" width="700" />
@@ -194,6 +194,6 @@ This ensures the team has an uniform development environment. Afterwards, the te
 ### Choice of PySpark, PyTorch and TorchDistributor
 We chose PySpark as the framework to develop the scalable and distributed machine learning pipeline.
 
-We chose PyTorch to develop the model since we had two Macs with Apple M1 chip. Both experienced dependency compatibility issues with TensorFlow. 
+For model development, we selected PyTorch since we had two Macs with Apple M1 chip. Both experienced dependency compatibility issues with TensorFlow. 
 
-We investigated both TorchDistributor and Flower (a federated learning framework) for realizing distributed machine learning. We chose TorchDistributor because it is native to PySpark and for its simplicity and brevity.
+To implement distributed machine learning, we investigated both TorchDistributor and [Flower][https://flower.ai/], a federated learning framework. We chose TorchDistributor for its native integration with PySpark and its simplicity and brevity.
